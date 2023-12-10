@@ -1,0 +1,12 @@
+
+/* Class = "NSTextFieldCell"; title = "Emacs Install Dir:"; ObjectID = "NLP-qo-4QN"; */
+"NLP-qo-4QN.title" = "Emacs安装路径:";
+
+/* Class = "NSButtonCell"; title = "Launch At Login"; ObjectID = "Nrn-Rr-DzS"; */
+"Nrn-Rr-DzS.title" = "开机启动";
+
+/* Class = "NSWindow"; title = "Setting"; ObjectID = "QvC-M9-y7g"; */
+"QvC-M9-y7g.title" = "设置";
+
+/* Class = "NSTextFieldCell"; title = "Pid File Path:"; ObjectID = "s2g-7h-IVr"; */
+"s2g-7h-IVr.title" = "Pid文件路径:";

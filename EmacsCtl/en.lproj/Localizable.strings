@@ -1,0 +1,22 @@
+/* 
+  Localizable.strings
+  EmacsCtl
+
+  Created by Tony Tang on 2023/12/10.
+  
+*/
+
+"setting" = "Setting";
+"quit" = "Quit";
+
+"not_running" = "Not running";
+"start" = "Start";
+
+"running" = "Running at ";
+"new_window" = "New window";
+"restart" = "Restart";
+"stop" = "Stop";
+
+"about" = "About";
+"file" = "File";
+"close" = "Close";
