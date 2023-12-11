@@ -15,8 +15,8 @@ struct Config {
     var emacsInstallDir: String?
 }
 
-let storeKeyPidFile = "pid_file"
-let storeKeyInstallDir = "install_dir"
+let storeKeyPidFile = UserDefaultsKeys.pidFile
+let storeKeyInstallDir = UserDefaultsKeys.installDir
 
 class ConfigStore {
 

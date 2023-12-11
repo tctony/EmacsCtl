@@ -17,11 +17,11 @@ class LaunchAtLogin: NSObject {
     }
 
     override init() {
-        isEnabled = UserDefaults.standard.bool(forKey: "launch_at_login")
+        isEnabled = UserDefaults.standard.bool(forKey: UserDefaultsKeys.launchAtLogin)
     }
 
     private func onChange() {
-        UserDefaults.standard.set(isEnabled, forKey: "launch_at_login")
+        UserDefaults.standard.set(isEnabled, forKey: UserDefaultsKeys.launchAtLogin)
         UserDefaults.standard.synchronize()
 
         print("TODO implement launch at login")

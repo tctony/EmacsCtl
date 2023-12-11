@@ -100,7 +100,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func showSettingIfFirstLaunch() {
-        let key = "didShowSettingOnFirstLaunch"
+        let key = UserDefaultsKeys.didShowSettingOnFirstLaunch
         if UserDefaults.standard.bool(forKey: key) {
             return
         }
@@ -124,7 +124,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         settingWindowCtrl.showWindow(self)
         NSApp.activate(ignoringOtherApps: true)
-        settingWindowCtrl.window?.makeKeyAndOrderFront(self)
+        self.settingWindowCtrl.window?.makeKeyAndOrderFront(self)
 
         settingWindowCtrl.onClose { [weak self] in
             self?.settingWindowCtrl = nil

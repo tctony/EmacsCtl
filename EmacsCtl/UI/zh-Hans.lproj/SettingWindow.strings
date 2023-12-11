@@ -1,6 +1,6 @@
 
 /* Class = "NSTextFieldCell"; title = "Emacs Install Dir:"; ObjectID = "NLP-qo-4QN"; */
-"NLP-qo-4QN.title" = "Emacs安装路径:";
+"NLP-qo-4QN.title" = "Emacs可执行文件目录:";
 
 /* Class = "NSButtonCell"; title = "Launch At Login"; ObjectID = "Nrn-Rr-DzS"; */
 "Nrn-Rr-DzS.title" = "开机启动";
