@@ -68,7 +68,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
 
             do {
-                let pidStr = try String(contentsOfFile: config.emacsPidFile!, encoding: .utf8)
+                var pidStr = ""
+
+                var isStale = false
+                if let url = try? URL(resolvingBookmarkData: config.pidFileBookmarkData,
+                              options: .withSecurityScope,
+                              relativeTo: nil,
+                                 bookmarkDataIsStale: &isStale) {
+                    if !isStale && url.startAccessingSecurityScopedResource() {
+                        pidStr = try String(contentsOfFile: url.path, encoding: .utf8)
+                        url.stopAccessingSecurityScopedResource()
+                    }
+                }
+
                 if let pid = Int(pidStr), pid > 0 {
                     runningItem.attributedTitle = makeStatusAttrString("\(NSLocalizedString("running", comment: "")) \(pid)")
 

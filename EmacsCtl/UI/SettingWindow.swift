@@ -54,10 +54,10 @@ class SettingWindowController: BaseWindowController {
                 pidFileTextField.stringValue = filePath
 
                 do {
-                    
-                    let bookmarkData = try url.bookmarkData(options: .withSecurityScope,
-                                                                      includingResourceValuesForKeys: nil,
-                                                                      relativeTo: nil)
+                    let url2 = NSURL(fileURLWithPath: url.path)
+                    let bookmarkData = try url2.bookmarkData(options: [ .withSecurityScope, .securityScopeAllowOnlyReadAccess],
+                                                             includingResourceValuesForKeys: nil,
+                                                             relativeTo: nil)
                     ConfigStore.shared.setPidFile(path: filePath, data: bookmarkData)
                 } catch {
                     print("Failed to create bookmark: \(error)")

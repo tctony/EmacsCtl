@@ -27,6 +27,7 @@ class ConfigStore {
 
     private init() {
         config = Config(emacsPidFile: store.string(forKey: UserDefaultsKeys.pidFile),
+                        pidFileBookmarkData: store.data(forKey: UserDefaultsKeys.pidFileBookmarkData),
                         emacsInstallDir: store.string(forKey: UserDefaultsKeys.installDir))
     }
 
