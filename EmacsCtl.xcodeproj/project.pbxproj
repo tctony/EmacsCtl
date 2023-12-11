@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C4FB1372B26A85600C1645F /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4FB1362B26A85600C1645F /* UserDefaults.swift */; };
+		4C4FB13A2B272C3000C1645F /* Sandbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4FB1392B272C3000C1645F /* Sandbox.swift */; };
 		EA12CF0E2B24D4F2005033A8 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12CF0D2B24D4F2005033A8 /* main.swift */; };
 		EA12CF142B255122005033A8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EA12CF162B255122005033A8 /* Localizable.strings */; };
 		EA12CF2E2B25E1CF005033A8 /* SettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA12CF302B25E1CF005033A8 /* SettingWindow.xib */; };
@@ -23,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		4C4FB1362B26A85600C1645F /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		4C4FB1392B272C3000C1645F /* Sandbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sandbox.swift; sourceTree = "<group>"; };
 		EA12CF0D2B24D4F2005033A8 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		EA12CF152B255122005033A8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EA12CF172B255145005033A8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 				EA12CF3D2B25FE75005033A8 /* AppMenu.swift */,
 				EAB3303C2B23571E006BC4DD /* ConfigStore.swift */,
 				4C4FB1362B26A85600C1645F /* UserDefaults.swift */,
+				4C4FB1392B272C3000C1645F /* Sandbox.swift */,
 				EAB3303A2B235712006BC4DD /* EmacsControl.swift */,
 				EA12CF1B2B25CA21005033A8 /* UI */,
 				EA12CF392B25F3B7005033A8 /* LaunchAtLogin.swift */,
@@ -195,6 +198,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EAB3302D2B221BD0006BC4DD /* SettingWindow.swift in Sources */,
+				4C4FB13A2B272C3000C1645F /* Sandbox.swift in Sources */,
 				EA12CF3A2B25F3B7005033A8 /* LaunchAtLogin.swift in Sources */,
 				EA12CF0E2B24D4F2005033A8 /* main.swift in Sources */,
 				EA12CF382B25ECCE005033A8 /* BaseWindowController.swift in Sources */,
@@ -352,7 +356,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = EmacsCtl/EmacsCtl.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -382,7 +386,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = EmacsCtl/EmacsCtl.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;

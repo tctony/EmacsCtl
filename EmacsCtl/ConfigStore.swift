@@ -11,12 +11,11 @@ import Foundation
 
 struct Config {
     var emacsPidFile: String?
+    var pidFileBookmarkData: Data!
 
     var emacsInstallDir: String?
 }
 
-let storeKeyPidFile = UserDefaultsKeys.pidFile
-let storeKeyInstallDir = UserDefaultsKeys.installDir
 
 class ConfigStore {
 
@@ -27,19 +26,23 @@ class ConfigStore {
     private let store = UserDefaults.standard
 
     private init() {
-        config = Config(emacsPidFile: store.string(forKey: storeKeyPidFile),
-                        emacsInstallDir: store.string(forKey: storeKeyInstallDir))
+        config = Config(emacsPidFile: store.string(forKey: UserDefaultsKeys.pidFile),
+                        emacsInstallDir: store.string(forKey: UserDefaultsKeys.installDir))
     }
 
-    func setPidFile(_ pidFile: String) {
-        store.set(pidFile, forKey: storeKeyPidFile)
+    func setPidFile(path: String, data: Data) {
+        store.set(path, forKey: UserDefaultsKeys.pidFile)
+        store.set(data, forKey: UserDefaultsKeys.pidFileBookmarkData)
         store.synchronize()
-
-        config.emacsPidFile = pidFile
+        
+        var newValue = config
+        newValue.emacsPidFile = path
+        newValue.pidFileBookmarkData = data
+        config = newValue
     }
 
     func setInstallDir(_ installDir: String) {
-        store.set(installDir, forKey: storeKeyInstallDir)
+        store.set(installDir, forKey: UserDefaultsKeys.installDir)
         store.synchronize()
         
         config.emacsInstallDir = installDir

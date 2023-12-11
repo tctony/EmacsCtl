@@ -27,6 +27,13 @@ class SettingWindowController: BaseWindowController {
         if let dir = ConfigStore.shared.config.emacsInstallDir {
             installDirTextField.stringValue = dir
         }
+
+        #if DEBUG
+        let button = NSButton(title: "reset data", target: self, action: #selector(resetData(_:)))
+        button.sizeToFit()
+        button.frame.origin.x = window!.frame.size.width - button.frame.size.width
+        window?.contentView?.addSubview(button)
+        #endif
     }
 
     @IBAction func selectPidFilePath(_ sender: Any) {
@@ -46,7 +53,15 @@ class SettingWindowController: BaseWindowController {
 
                 pidFileTextField.stringValue = filePath
 
-                ConfigStore.shared.setPidFile(filePath)
+                do {
+                    
+                    let bookmarkData = try url.bookmarkData(options: .withSecurityScope,
+                                                                      includingResourceValuesForKeys: nil,
+                                                                      relativeTo: nil)
+                    ConfigStore.shared.setPidFile(path: filePath, data: bookmarkData)
+                } catch {
+                    print("Failed to create bookmark: \(error)")
+                }
             }
         } else {
             print("select pid file path not ok")
@@ -75,6 +90,12 @@ class SettingWindowController: BaseWindowController {
         } else {
             print("select install dir not ok")
         }
+    }
+
+    @objc func resetData(_ sender: Any?) {
+        print("reset data");
+        let domain = Bundle.main.bundleIdentifier!
+        UserDefaults.standard.removePersistentDomain(forName: domain)
     }
 
 }
