@@ -55,7 +55,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         menu.removeAllItems()
 
-        if config.emacsPidFile != nil {
+        if config.emacsPidFile != nil && config.emacsInstallDir != nil {
             let runningItem = NSMenuItem()
             menu.addItem(runningItem)
 
@@ -68,19 +68,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
 
             do {
-                var pidStr = ""
-
-                var isStale = false
-                if let url = try? URL(resolvingBookmarkData: config.pidFileBookmarkData,
-                              options: .withSecurityScope,
-                              relativeTo: nil,
-                                 bookmarkDataIsStale: &isStale) {
-                    if !isStale && url.startAccessingSecurityScopedResource() {
-                        pidStr = try String(contentsOfFile: url.path, encoding: .utf8)
-                        url.stopAccessingSecurityScopedResource()
-                    }
-                }
-
+                let pidStr = try String(contentsOfFile: config.emacsPidFile!, encoding: .utf8)
                 if let pid = Int(pidStr), pid > 0 {
                     runningItem.attributedTitle = makeStatusAttrString("\(NSLocalizedString("running", comment: "")) \(pid)")
 
@@ -163,7 +151,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func stopEmacs(_ sender: NSMenuItem) {
         print("stop emacs");
-        // WIP
+        EmacsControl.stopEmacs()
     }
 
     @objc func startEmacs(_ sender: NSMenuItem) {

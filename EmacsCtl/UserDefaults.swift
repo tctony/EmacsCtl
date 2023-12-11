@@ -9,8 +9,6 @@ import Foundation
 
 class UserDefaultsKeys {
     static let pidFile = "pid_file"
-    static let pidFileBookmarkData = "pid_file_bookmark_data"
-
     static let installDir = "install_dir"
 
     static let didShowSettingOnFirstLaunch = "didShowSettingOnFirstLaunch"
