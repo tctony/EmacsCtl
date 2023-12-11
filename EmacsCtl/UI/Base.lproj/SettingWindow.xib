@@ -34,9 +34,9 @@
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="bNo-3K-NSC">
-                        <rect key="frame" x="8" y="94" width="108" height="16"/>
+                        <rect key="frame" x="8" y="94" width="149" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" lineBreakMode="clipping" title="Emacs Install Dir:" id="NLP-qo-4QN">
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Emacs Binary Directory:" id="NLP-qo-4QN">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
