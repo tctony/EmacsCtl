@@ -4,5 +4,18 @@
 <dict>
 	<key>LSUIElement</key>
 	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>org-protocol handler</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>org-protocol</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

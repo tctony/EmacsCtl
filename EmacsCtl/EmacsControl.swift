@@ -119,6 +119,18 @@ class EmacsControl: NSObject {
         }
     }
 
+    static func handleUrl(_ url: String, _ succeed: ((Bool) -> Void)? = nil) {
+        runShellCommand(EmacsClient, ["-c", "-n", "\"\(url)\""]) { code, msg in
+            print("\(#function) result: \(code) \(msg)")
+            if code == 0 {
+                succeed?(true)
+            } else {
+                displayError(#function, msg)
+                succeed?(false)
+            }
+        }
+    }
+
     // MARK: -
 
     static let EmacsBundleId = "org.gnu.Emacs"

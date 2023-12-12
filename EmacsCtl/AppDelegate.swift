@@ -46,6 +46,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         showSettingIfFirstLaunch()
     }
 
+    func application(_ application: NSApplication, open urls: [URL]) {
+        for url in urls {
+            if (url.scheme == "org-protocol") {
+                EmacsControl.handleUrl(url.absoluteString)
+            }
+        }
+    }
+
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
