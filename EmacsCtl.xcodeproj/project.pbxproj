@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		4C4FB1372B26A85600C1645F /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4FB1362B26A85600C1645F /* UserDefaults.swift */; };
 		EA1058C42B28417F0050DA91 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1058C32B28417F0050DA91 /* Util.swift */; };
+		EA1058D52B284C9D0050DA91 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1058D42B284C9D0050DA91 /* AppDelegate.swift */; };
+		EA1058E12B284D6E0050DA91 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1058E02B284D6E0050DA91 /* main.swift */; };
+		EA1058E52B2850370050DA91 /* LaunchHelper.app in Copy LaunchHelper */ = {isa = PBXBuildFile; fileRef = EA1058D22B284C9D0050DA91 /* LaunchHelper.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EA12CF0E2B24D4F2005033A8 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12CF0D2B24D4F2005033A8 /* main.swift */; };
 		EA12CF142B255122005033A8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EA12CF162B255122005033A8 /* Localizable.strings */; };
 		EA12CF2E2B25E1CF005033A8 /* SettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA12CF302B25E1CF005033A8 /* SettingWindow.xib */; };
@@ -22,9 +25,28 @@
 		EAB3303D2B23571E006BC4DD /* ConfigStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB3303C2B23571E006BC4DD /* ConfigStore.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		EA1058E42B2850270050DA91 /* Copy LaunchHelper */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LoginItems;
+			dstSubfolderSpec = 1;
+			files = (
+				EA1058E52B2850370050DA91 /* LaunchHelper.app in Copy LaunchHelper */,
+			);
+			name = "Copy LaunchHelper";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		4C4FB1362B26A85600C1645F /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		EA1058C32B28417F0050DA91 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		EA1058D22B284C9D0050DA91 /* LaunchHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LaunchHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA1058D42B284C9D0050DA91 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		EA1058DB2B284C9F0050DA91 /* LaunchHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LaunchHelper.entitlements; sourceTree = "<group>"; };
+		EA1058E02B284D6E0050DA91 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		EA1058E72B2851850050DA91 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EA12CF0D2B24D4F2005033A8 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		EA12CF152B255122005033A8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EA12CF172B255145005033A8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -45,6 +67,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EA1058CF2B284C9D0050DA91 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EAB330242B221BD0006BC4DD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -55,6 +84,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EA1058D32B284C9D0050DA91 /* LaunchHelper */ = {
+			isa = PBXGroup;
+			children = (
+				EA1058E72B2851850050DA91 /* Info.plist */,
+				EA1058E02B284D6E0050DA91 /* main.swift */,
+				EA1058D42B284C9D0050DA91 /* AppDelegate.swift */,
+				EA1058DB2B284C9F0050DA91 /* LaunchHelper.entitlements */,
+			);
+			path = LaunchHelper;
+			sourceTree = "<group>";
+		};
 		EA12CF1B2B25CA21005033A8 /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -69,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				EAB330292B221BD0006BC4DD /* EmacsCtl */,
+				EA1058D32B284C9D0050DA91 /* LaunchHelper */,
 				EAB330282B221BD0006BC4DD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -77,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				EAB330272B221BD0006BC4DD /* EmacsCtl.app */,
+				EA1058D22B284C9D0050DA91 /* LaunchHelper.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -104,6 +146,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		EA1058D12B284C9D0050DA91 /* LaunchHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EA1058DC2B284C9F0050DA91 /* Build configuration list for PBXNativeTarget "LaunchHelper" */;
+			buildPhases = (
+				EA1058CE2B284C9D0050DA91 /* Sources */,
+				EA1058CF2B284C9D0050DA91 /* Frameworks */,
+				EA1058D02B284C9D0050DA91 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LaunchHelper;
+			productName = LaunchHelper;
+			productReference = EA1058D22B284C9D0050DA91 /* LaunchHelper.app */;
+			productType = "com.apple.product-type.application";
+		};
 		EAB330262B221BD0006BC4DD /* EmacsCtl */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EAB330362B221BD1006BC4DD /* Build configuration list for PBXNativeTarget "EmacsCtl" */;
@@ -112,6 +171,7 @@
 				EAB330242B221BD0006BC4DD /* Frameworks */,
 				EA12CF462B260AB2005033A8 /* Generate xib strings */,
 				EAB330252B221BD0006BC4DD /* Resources */,
+				EA1058E42B2850270050DA91 /* Copy LaunchHelper */,
 			);
 			buildRules = (
 			);
@@ -132,6 +192,9 @@
 				LastSwiftUpdateCheck = 1400;
 				LastUpgradeCheck = 1400;
 				TargetAttributes = {
+					EA1058D12B284C9D0050DA91 = {
+						CreatedOnToolsVersion = 14.0;
+					};
 					EAB330262B221BD0006BC4DD = {
 						CreatedOnToolsVersion = 14.0;
 					};
@@ -152,11 +215,19 @@
 			projectRoot = "";
 			targets = (
 				EAB330262B221BD0006BC4DD /* EmacsCtl */,
+				EA1058D12B284C9D0050DA91 /* LaunchHelper */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		EA1058D02B284C9D0050DA91 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EAB330252B221BD0006BC4DD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -193,6 +264,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EA1058CE2B284C9D0050DA91 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA1058E12B284D6E0050DA91 /* main.swift in Sources */,
+				EA1058D52B284C9D0050DA91 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EAB330232B221BD0006BC4DD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -235,6 +315,60 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		EA1058DD2B284C9F0050DA91 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = LaunchHelper/LaunchHelper.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LaunchHelper/Info.plist;
+				INFOPLIST_KEY_LSBackgroundOnly = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tctony.EmacsCtl.LaunchHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		EA1058DE2B284C9F0050DA91 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = LaunchHelper/LaunchHelper.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LaunchHelper/Info.plist;
+				INFOPLIST_KEY_LSBackgroundOnly = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tctony.EmacsCtl.LaunchHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		EAB330342B221BD1006BC4DD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -356,11 +490,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = EmacsCtl/EmacsCtl.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = NSWMLDGCEZ;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EmacsCtl/Info.plist;
@@ -386,11 +520,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = EmacsCtl/EmacsCtl.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = NSWMLDGCEZ;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EmacsCtl/Info.plist;
@@ -413,6 +547,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EA1058DC2B284C9F0050DA91 /* Build configuration list for PBXNativeTarget "LaunchHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA1058DD2B284C9F0050DA91 /* Debug */,
+				EA1058DE2B284C9F0050DA91 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EAB330222B221BD0006BC4DD /* Build configuration list for PBXProject "EmacsCtl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

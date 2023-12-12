@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ServiceManagement
 
 class LaunchAtLogin: NSObject {
 
@@ -24,6 +25,7 @@ class LaunchAtLogin: NSObject {
         UserDefaults.standard.set(isEnabled, forKey: UserDefaultsKeys.launchAtLogin)
         UserDefaults.standard.synchronize()
 
-        print("TODO implement launch at login")
+        let bundleid = "\(Bundle.main.bundleIdentifier!).LaunchHelper"
+        SMLoginItemSetEnabled(bundleid as CFString, isEnabled)
     }
 }
