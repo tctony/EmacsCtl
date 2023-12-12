@@ -141,12 +141,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func createEmacsWindow(_ sender: NSMenuItem) {
         print("create new emacs window");
-        // WIP
+        EmacsControl.newEmacsWindow()
     }
 
     @objc func restartEmacs(_ sender: NSMenuItem) {
-        print("restart emacs");
-        // WIP
+        print("restart emacs daemon");
+        EmacsControl.restartEmacsDaemon()
     }
 
     @objc func stopEmacs(_ sender: NSMenuItem) {
@@ -155,8 +155,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func startEmacs(_ sender: NSMenuItem) {
-        print("start emacs deamon");
-        // WIP
+        print("start emacs daemon");
+        EmacsControl.startEmacsDaemon()
     }
 
     @objc func quitEmacsCtl(_ sender: NSMenuItem) {
