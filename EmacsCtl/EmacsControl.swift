@@ -12,7 +12,7 @@ import UserNotifications
 class EmacsControl {
 
     static let Emacs = "emacs"
-    static let EmacsClient = "emacsclientaaa"
+    static let EmacsClient = "emacsclient"
 
     static func startEmacsDaemon(_ succeed: ((Bool) -> Void)? = nil) {
         runShellCommand(Emacs, ["--daemon"]) { code, msg in
