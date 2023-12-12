@@ -19,6 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             $0.bundleIdentifier == mainAppBundleId
         }
 
+
         if !isRunning {
             print("not running")
             var path = Bundle.main.bundlePath as NSString
@@ -26,12 +27,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 path = path.deletingLastPathComponent as NSString
             }
             let applicationPathString = path as String
-            guard let pathURL = URL(string: applicationPathString) else { return }
-            NSWorkspace.shared.openApplication(at: pathURL,
-                                               configuration: NSWorkspace.OpenConfiguration(),
-                                               completionHandler: nil)
+            print("opening \(applicationPathString)")
+            NSWorkspace.shared.openApplication(at: URL(fileURLWithPath: applicationPathString),
+                                                  configuration: .init()) { _, error in
+                print("succeed")
+                if error != nil {
+                    print(error!)
+                }
+                NSApp.terminate(nil)
+            }
         } else {
-            print("running")
+            print("already running")
+            NSApp.terminate(nil)
         }
     }
 

@@ -24,6 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         print("did launch as agent")
+        print(Bundle.main.bundlePath)
 
         if let button = statusItem.button {
             if let image = NSImage(named: "tray") {
