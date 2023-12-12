@@ -1,4 +1,7 @@
 
+/* Class = "NSTextFieldCell"; title = "Shortcut"; ObjectID = "EqI-f1-EAJ"; */
+"EqI-f1-EAJ.title" = "快捷键";
+
 /* Class = "NSTextFieldCell"; title = "Emacs Install Dir:"; ObjectID = "NLP-qo-4QN"; */
 "NLP-qo-4QN.title" = "Emacs二进制目录:";
 

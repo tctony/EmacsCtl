@@ -28,3 +28,4 @@ func displayNotification(_ content: UNNotificationContent) {
         }
     }
 }
+

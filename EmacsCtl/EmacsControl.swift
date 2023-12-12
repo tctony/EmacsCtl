@@ -9,7 +9,7 @@ import Foundation
 import AppKit
 import UserNotifications
 
-class EmacsControl {
+class EmacsControl: NSObject {
 
     static let Emacs = "emacs"
     static let EmacsClient = "emacsclient"
@@ -40,10 +40,10 @@ class EmacsControl {
 
     static func focusOnEmacs(_ succeed: ((Bool) -> Void)? = nil) {
         let workspace = NSWorkspace.shared
-        let bundleId = "org.gnu.Emacs"
-        if workspace.runningApplications.contains(where: { $0.bundleIdentifier == bundleId }) {
+
+        if isRunning() {
             print("emacs is running")
-            if let appURL = workspace.urlForApplication(withBundleIdentifier: bundleId) {
+            if let appURL = workspace.urlForApplication(withBundleIdentifier: EmacsBundleId) {
                 print("focus on running emacs")
                 workspace.openApplication(at: appURL, configuration: .init())
 
@@ -78,6 +78,59 @@ class EmacsControl {
                 succeed?(false)
             }
         }
+    }
+
+    static func minimizeEmacs(_ succeed: ((Bool) -> Void)? = nil) {
+        runShellCommand(EmacsClient, ["--eval", "(iconify-or-deiconify-frame)"]) { code, msg in
+            print("\(#function) result: \(code) \(msg)")
+            if code == 0 {
+                succeed?(true)
+            } else {
+                displayError(#function, msg)
+                succeed?(false)
+            }
+        }
+    }
+
+    @objc static func switchToEmacs() {
+        guard isRunning() else {
+            displayError("switchToEmacs", "Emacs is not running!")
+            return
+        }
+
+        guard let app = NSWorkspace.shared.runningApplications.first(where: {
+            return $0.bundleIdentifier == EmacsBundleId
+        }) else {
+            displayError("switchToEmacs", "Emacs is not running!")
+            return
+        }
+
+        if isFrontMost() {
+            minimizeEmacs()
+            return
+        }
+
+        let windowListInfo = CGWindowListCopyWindowInfo(.optionAll, kCGNullWindowID) as! [[String: Any]]
+        let windowIDs = windowListInfo.compactMap { $0[kCGWindowOwnerPID as String] as? Int }
+        if windowIDs.contains(numericCast(app.processIdentifier)) {
+            focusOnEmacs()
+        } else {
+            newEmacsWindow()
+        }
+    }
+
+    // MARK: -
+
+    static let EmacsBundleId = "org.gnu.Emacs"
+
+    static func isRunning() -> Bool {
+        return NSWorkspace.shared.runningApplications.contains(where: {
+            return $0.bundleIdentifier == EmacsBundleId
+        })
+    }
+
+    static func isFrontMost() -> Bool {
+        return NSWorkspace.shared.frontmostApplication?.bundleIdentifier == EmacsBundleId
     }
 
     // MARK: -

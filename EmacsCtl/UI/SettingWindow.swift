@@ -29,7 +29,7 @@ class SettingWindowController: BaseWindowController {
         }
 
         #if DEBUG
-        let button = NSButton(title: "reset data", target: self, action: #selector(resetData(_:)))
+        let button = NSButton(title: "reset", target: self, action: #selector(resetData(_:)))
         button.sizeToFit()
         button.frame.origin.x = window!.frame.size.width - button.frame.size.width
         window?.contentView?.addSubview(button)

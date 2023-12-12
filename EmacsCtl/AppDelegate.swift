@@ -41,6 +41,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self?.refreshMenu($0)
         }
 
+        ShortcutsController.bindShortcuts()
+
         showSettingIfFirstLaunch()
     }
 
