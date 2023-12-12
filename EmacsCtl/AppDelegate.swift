@@ -16,6 +16,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var cancellable: AnyCancellable?
 
+    var pidFileObserver: DispatchSourceFileSystemObject?
+
     var settingWindowCtrl: SettingWindowController!
 
     // MARK: -
@@ -34,6 +36,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         cancellable = ConfigStore.shared.$config.sink { [weak self] in
             print("config changed to: \($0)")
+            self?.rescheduleObserver($0)
             self?.refreshMenu($0)
         }
 
@@ -49,6 +52,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     // MARK: -
+
+    func rescheduleObserver(_ config: Config) {
+        pidFileObserver?.cancel()
+
+        guard let pidFile = config.emacsPidFile else {
+            return
+        }
+
+        let url = URL(fileURLWithPath: pidFile)
+        let fd = open(url.path, O_EVTONLY)
+        pidFileObserver = DispatchSource.makeFileSystemObjectSource(fileDescriptor: fd, eventMask: .all)
+        pidFileObserver?.setEventHandler { [weak self] in
+            print("pid file changed")
+            self?.refreshMenu(config)
+        }
+        pidFileObserver?.setCancelHandler {
+            close(fd)
+        }
+        pidFileObserver?.resume()
+        print("monitoring pid file change")
+    }
 
     func refreshMenu(_ config: Config) {
         print("refreshing menu")
@@ -69,6 +93,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
             do {
                 let pidStr = try String(contentsOfFile: config.emacsPidFile!, encoding: .utf8)
+                print("content of pidFile: '\(pidStr)'")
                 if let pid = Int(pidStr), pid > 0 {
                     runningItem.attributedTitle = makeStatusAttrString("\(NSLocalizedString("running", comment: "")) \(pid)")
 
@@ -76,12 +101,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     menu.addItem(NSMenuItem(title: NSLocalizedString("new_window", comment: ""),
                                             action: #selector(AppDelegate.createEmacsWindow(_:)), 
                                             keyEquivalent: "f"))
-                    menu.addItem(NSMenuItem(title: NSLocalizedString("restart", comment: ""),
-                                            action: #selector(AppDelegate.restartEmacs(_:)),
-                                            keyEquivalent: "r"))
                     menu.addItem(NSMenuItem(title: NSLocalizedString("stop", comment: ""),
                                             action: #selector(AppDelegate.stopEmacs(_:)), 
                                             keyEquivalent: "d"))
+                    menu.addItem(NSMenuItem(title: NSLocalizedString("restart", comment: ""),
+                                            action: #selector(AppDelegate.restartEmacs(_:)),
+                                            keyEquivalent: "r"))
                 } else {
                     runningItem.attributedTitle = makeStatusAttrString("\(NSLocalizedString("not_running", comment: ""))")
                     menu.addItem(NSMenuItem(title: NSLocalizedString("start", comment: ""),

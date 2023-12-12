@@ -26,7 +26,7 @@ class AppMenu: NSMenu {
         ]
 
         let fileMenu = NSMenuItem()
-        fileMenu.submenu = NSMenu(title: NSLocalizedString("file", comment: ""))
+        fileMenu.submenu = NSMenu(title: NSLocalizedString("window", comment: ""))
         fileMenu.submenu?.items = [
             NSMenuItem(title: NSLocalizedString("close", comment: ""),
                        action: #selector(NSWindow.performClose(_:)),
