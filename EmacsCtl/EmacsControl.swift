@@ -7,11 +7,12 @@
 
 import Foundation
 import AppKit
+import UserNotifications
 
 class EmacsControl {
 
     static let Emacs = "emacs"
-    static let EmacsClient = "emacsclient"
+    static let EmacsClient = "emacsclientaaa"
 
     static func startEmacsDaemon(_ succeed: ((Bool) -> Void)? = nil) {
         runShellCommand(Emacs, ["--daemon"]) { code, msg in
@@ -111,7 +112,13 @@ class EmacsControl {
     }
 
     static func displayError(_ action: String, _ msg: String) {
-        // TODO show error notification
         print("\(action) error: \(msg)")
+
+        let content = UNMutableNotificationContent()
+        content.title = action.replacingOccurrences(of: "\\(.*\\)", with: "", options: .regularExpression)
+        content.body = msg.lengthOfBytes(using: .utf8) > 0 ? msg : "unknown"
+        content.sound = .default
+
+        displayNotification(content)
     }
 }

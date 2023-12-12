@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C4FB1372B26A85600C1645F /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4FB1362B26A85600C1645F /* UserDefaults.swift */; };
+		EA1058C42B28417F0050DA91 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1058C32B28417F0050DA91 /* Util.swift */; };
 		EA12CF0E2B24D4F2005033A8 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12CF0D2B24D4F2005033A8 /* main.swift */; };
 		EA12CF142B255122005033A8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EA12CF162B255122005033A8 /* Localizable.strings */; };
 		EA12CF2E2B25E1CF005033A8 /* SettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA12CF302B25E1CF005033A8 /* SettingWindow.xib */; };
@@ -23,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		4C4FB1362B26A85600C1645F /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		EA1058C32B28417F0050DA91 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		EA12CF0D2B24D4F2005033A8 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		EA12CF152B255122005033A8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EA12CF172B255145005033A8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 				EAB3303A2B235712006BC4DD /* EmacsControl.swift */,
 				EA12CF1B2B25CA21005033A8 /* UI */,
 				EA12CF392B25F3B7005033A8 /* LaunchAtLogin.swift */,
+				EA1058C32B28417F0050DA91 /* Util.swift */,
 				EA12CF162B255122005033A8 /* Localizable.strings */,
 				EAB3302E2B221BD1006BC4DD /* Assets.xcassets */,
 				EAB330392B221C4C006BC4DD /* Info.plist */,
@@ -201,6 +204,7 @@
 				EAB3303D2B23571E006BC4DD /* ConfigStore.swift in Sources */,
 				4C4FB1372B26A85600C1645F /* UserDefaults.swift in Sources */,
 				EAB3302B2B221BD0006BC4DD /* AppDelegate.swift in Sources */,
+				EA1058C42B28417F0050DA91 /* Util.swift in Sources */,
 				EA12CF3E2B25FE75005033A8 /* AppMenu.swift in Sources */,
 				EAB3303B2B235712006BC4DD /* EmacsControl.swift in Sources */,
 			);
