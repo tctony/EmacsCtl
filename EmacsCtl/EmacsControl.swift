@@ -13,29 +13,31 @@ class EmacsControl {
     static let Emacs = "emacs"
     static let EmacsClient = "emacsclient"
 
-    static func startEmacsDaemon() {
+    static func startEmacsDaemon(_ succeed: ((Bool) -> Void)? = nil) {
         runShellCommand(Emacs, ["--daemon"]) { code, msg in
             print("\(#function) result: \(code) \(msg)")
             if code == 0 {
-                newEmacsWindow()
+                newEmacsWindow(succeed)
             } else {
                 displayError(#function, msg)
+                succeed?(false)
             }
         }
     }
 
-    static func newEmacsWindow() {
+    static func newEmacsWindow(_ succeed: ((Bool) -> Void)? = nil) {
         runShellCommand(EmacsClient, ["-c", "-n"]) { code, msg in
             print("\(#function) result: \(code) \(msg)")
             if code == 0 {
-                focusOnEmacs()
+                focusOnEmacs(succeed)
             } else {
                 displayError(#function, msg)
+                succeed?(false)
             }
         }
     }
 
-    static func focusOnEmacs() {
+    static func focusOnEmacs(_ succeed: ((Bool) -> Void)? = nil) {
         let workspace = NSWorkspace.shared
         let bundleId = "org.gnu.Emacs"
         if workspace.runningApplications.contains(where: { $0.bundleIdentifier == bundleId }) {
@@ -43,30 +45,36 @@ class EmacsControl {
             if let appURL = workspace.urlForApplication(withBundleIdentifier: bundleId) {
                 print("focus on running emacs")
                 workspace.openApplication(at: appURL, configuration: .init())
+
+                succeed?(true)
+                return
             } else {
                 print("emacs is not running")
             }
         }
+        succeed?(false)
     }
 
-    static func stopEmacs() {
+    static func stopEmacs(_ succeed: ((Bool) -> Void)? = nil) {
         runShellCommand(EmacsClient, ["--eval", "(kill-emacs)"]) { code, msg in
             print("\(#function) result: \(code) \(msg)")
-            if code != 0 {
+            if code == 0 {
+                succeed?(true)
+            } else {
                 displayError(#function, msg)
+                succeed?(false)
             }
         }
     }
 
-    static func restartEmacsDaemon() {
-        runShellCommand(EmacsClient, ["--eval", "(kill-emacs nil t)"]) { code, msg in
-            print("\(#function) result: \(code) \(msg)")
-            if code == 0 {
-                DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
-                    newEmacsWindow()
+    static func restartEmacsDaemon(_ succeed: ((Bool) -> Void)? = nil) {
+        stopEmacs { ok in
+            if ok {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    startEmacsDaemon(succeed)
                 }
             } else {
-                displayError(#function, msg)
+                succeed?(false)
             }
         }
     }
