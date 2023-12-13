@@ -20,7 +20,7 @@ class EmacsControl: NSObject {
             if code == 0 {
                 newEmacsWindow(succeed)
             } else {
-                displayError(#function, msg)
+                displayError(#function, code, msg)
                 succeed?(false)
             }
         }
@@ -32,7 +32,7 @@ class EmacsControl: NSObject {
             if code == 0 {
                 focusOnEmacs(succeed)
             } else {
-                displayError(#function, msg)
+                displayError(#function, code, msg)
                 succeed?(false)
             }
         }
@@ -62,7 +62,7 @@ class EmacsControl: NSObject {
             if code == 0 {
                 succeed?(true)
             } else {
-                displayError(#function, msg)
+                displayError(#function, code, msg)
                 succeed?(false)
             }
         }
@@ -86,7 +86,7 @@ class EmacsControl: NSObject {
             if code == 0 {
                 succeed?(true)
             } else {
-                displayError(#function, msg)
+                displayError(#function, code, msg)
                 succeed?(false)
             }
         }
@@ -94,14 +94,14 @@ class EmacsControl: NSObject {
 
     @objc static func switchToEmacs() {
         guard isRunning() else {
-            displayError("switchToEmacs", "Emacs is not running!")
+            displayError("switchToEmacs", -1, "Emacs is not running!")
             return
         }
 
         guard let app = NSWorkspace.shared.runningApplications.first(where: {
             return $0.bundleIdentifier == EmacsBundleId
         }) else {
-            displayError("switchToEmacs", "Emacs is not running!")
+            displayError("switchToEmacs", -1, "Emacs is not running!")
             return
         }
 
@@ -125,7 +125,7 @@ class EmacsControl: NSObject {
             if code == 0 {
                 focusOnEmacs(succeed)
             } else {
-                displayError(#function, msg)
+                displayError(#function, code, msg)
                 succeed?(false)
             }
         }
@@ -176,11 +176,12 @@ class EmacsControl: NSObject {
         }
     }
 
-    static func displayError(_ action: String, _ msg: String) {
+    static func displayError(_ action: String, _ code: Int32, _ msg: String) {
         print("\(action) error: \(msg)")
 
         let content = UNMutableNotificationContent()
         content.title = action.replacingOccurrences(of: "\\(.*\\)", with: "", options: .regularExpression)
+        content.subtitle = "code \(code)"
         content.body = msg.lengthOfBytes(using: .utf8) > 0 ? msg : "unknown"
         content.sound = .default
 
