@@ -88,6 +88,9 @@ class SettingWindowController: BaseWindowController {
         print("reset data");
         let domain = Bundle.main.bundleIdentifier!
         UserDefaults.standard.removePersistentDomain(forName: domain)
+        ConfigStore.shared.config = Config()
+
+        close()
     }
 
 }
