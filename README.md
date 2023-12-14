@@ -2,33 +2,43 @@
 
 A macos menu bar app which controls the state of emacs deamon process just like systemctl on linux.
 
-First write your emacs pid to file.
-```elisp
-(unless (spacemacs/system-is-mswindows)
-  (let ((pidfile (concat dotspacemacs-ignore-directory "emacs.pid"))
-        (pid (number-to-string (emacs-pid))))
+### How to use
 
-    (with-temp-file pidfile
-      (message (format "write pid %s to %s" pid pidfile))
-      (insert pid))
+- First write your emacs pid to file.
 
-    (add-hook 'kill-emacs-hook
-              `(lambda ()
-                 (with-temp-file ',pidfile)
-                  (insert "")))
-    )
-  )
+    For spacemacs user, just use following code:
+    ```elisp
+    (unless (spacemacs/system-is-mswindows)
+      (let ((pidfile (concat dotspacemacs-ignore-directory "emacs.pid"))
+            (pid (number-to-string (emacs-pid))))
 
-(provide 'pidfile)
-```
+        (with-temp-file pidfile
+          (message (format "write pid %s to %s" pid pidfile))
+          (insert pid))
 
-Then configure your pid file path and emacs path.
+        (add-hook 'kill-emacs-hook
+                  `(lambda ()
+                     (with-temp-file ',pidfile)
+                      (insert "")))
+        )
+      )
 
-// TODO configure window img
+    (provide 'pidfile)
+    ```
 
-Finally enjoy yourself!
+- Second configure your pid file path and emacs path.
 
-// TODO menu img
+    ![](./assets/setting.png)
 
+    At least, you should set `Pid File Path` and `Emacs Binary Directory`.
 
+    Also, you can set a shortcut to activate window window.
+
+- Finally control your emacs from status bar menu.
+
+    ![](./assets/menu.png)
+
+### Other
+
+- registry scheme `org-protocol` and forward it to `emacsclient -n`
 
