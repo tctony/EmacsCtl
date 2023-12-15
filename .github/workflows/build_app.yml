@@ -1,0 +1,21 @@
+name: Build App
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set Xcode version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '14.2'
+
+      - name: Build the app
+        run: |
+          xcodebuild -workspace EmacsCtl.xcworkspace -scheme EmacsCtl -configuration Release \
+            CONFIGURATION_BUILD_DIR="${{github.workspace}}/build"
