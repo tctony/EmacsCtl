@@ -2,6 +2,13 @@
 
 A macos menu bar app which controls the state of emacs deamon process just like systemctl on linux.
 
+This app also registry scheme `org-protocol` and forward it to `emacsclient -n` so you don't need to create an applescript to do that.
+
+### Install
+
+- Latest app can be downloaded from [Releases](/releases) page.
+- Or you can clone this project and build your own.
+
 ### How to use
 
 - First write your emacs pid to file.
@@ -37,8 +44,4 @@ A macos menu bar app which controls the state of emacs deamon process just like 
 - Finally control your emacs from status bar menu.
 
     ![](./assets/menu.png)
-
-### Other
-
-- registry scheme `org-protocol` and forward it to `emacsclient -n`
 
