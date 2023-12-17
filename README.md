@@ -6,7 +6,7 @@ This app also registry scheme `org-protocol` and forward it to `emacsclient -n` 
 
 ### Install
 
-- Latest app can be downloaded from [Releases](/releases) page.
+- Latest app can be downloaded from [Releases](https://github.com/tctony/EmacsCtl/releases) page.
 - Or you can clone this project and build your own.
 
 ### How to use
