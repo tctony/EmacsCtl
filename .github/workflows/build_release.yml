@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  create-dmg:
+    uses: ./.github/workflows/build_dmg.yml
+    secrets: inherit
+
+  release:
+    needs: create-dmg
+    
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Set dmg filename
+        run: |
+          DMG_FILE="EmacsCtl-${GITHUB_REF#refs/tags/}.dmg"
+          echo "DMG_FILE: $DMG_FILE"
+          echo "DMG_FILE=$DMG_FILE" >> $GITHUB_ENV
+        env:
+          GITHUB_REF: ${{ github.ref }}
+
+      - name: Dowonload dmg
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.DMG_FILE }}
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ${{ env.DMG_FILE }}
+    
+  

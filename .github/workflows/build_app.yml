@@ -1,12 +1,25 @@
 name: Build App
 
-on: workflow_dispatch
+on:
+  # push:
+  #   branches:
+  #     - 'push_build'
+  workflow_dispatch:
+  workflow_call:
 
 jobs:
   build:
     runs-on: macos-13
 
     steps:
+      - name: Setup var
+        run: |
+          echo "BUILD_OUT_DIR=$PWD/build" >> $GITHUB_ENV
+    
+      - name: Show vars
+        run: |
+          echo "BUILD_OUT_DIR is ${{ env.BUILD_OUT_DIR }}"
+
       - name: Checkout Code
         uses: actions/checkout@v3
 
@@ -18,4 +31,18 @@ jobs:
       - name: Build the app
         run: |
           xcodebuild -workspace EmacsCtl.xcworkspace -scheme EmacsCtl -configuration Release \
-            CONFIGURATION_BUILD_DIR="${{github.workspace}}/build"
+            CONFIGURATION_BUILD_DIR="${{ env.BUILD_OUT_DIR }}"
+            
+      - name: Zip app
+        run: |
+          cd ${{ env.BUILD_OUT_DIR }}
+          zip -r -y EmacsCtl.zip EmacsCtl.app
+          cd -
+      
+      - name: Upload app
+        uses: actions/upload-artifact@v3
+        with:
+          name: EmacsCtl.zip
+          path: ${{ env.BUILD_OUT_DIR }}/EmacsCtl.zip
+            
+
