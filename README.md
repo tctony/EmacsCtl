@@ -1,8 +1,10 @@
 # EmacsCtl
 
-A macos menu bar app which controls the state of emacs deamon process just like systemctl on linux.
-
-This app also registry scheme `org-protocol` and forward it to `emacsclient -n` so you don't need to create an applescript to do that.
+### Features
+- Use menu on mac status bar to control(start, restart, new window...) emacs deamon process just like systemctl does on linux.
+- Activate emacs window with global shortcut.
+- Support `org-protocol` scheme so you don't need to create an applescript to do that.
+- Support edit title before url using `org-roam-protocol` was passing to emacs.
 
 ### Install
 
