@@ -8,6 +8,7 @@
 import Foundation
 import AppKit
 import UserNotifications
+import os.log
 
 class EmacsControl: NSObject {
 
@@ -161,17 +162,24 @@ class EmacsControl: NSObject {
                 let process = Process()
                 process.launchPath = "\(ConfigStore.shared.config.emacsInstallDir!)/\(binary)"
                 process.arguments = arguments
+                
+                os_log("run command: %s %s", type: .info, process.launchPath ?? "",
+                       (process.arguments ?? []).joined(separator: " "))
 
                 try process.run()
                 process.waitUntilExit()
 
+                os_log("run command ok. status %d", type: .info, process.terminationStatus)
+
                 callback(process.terminationStatus, "")
             } catch let error as NSError {
-                print("run command error: \(error)")
+                os_log("run command error: %s", type: .error, error.localizedDescription)
+
                 callback(numericCast(error.code), error.localizedDescription)
             } catch {
-                print("run command error: \(error)")
-                callback(-1, "unknown error")
+                os_log("run command error: %s", type: .error, error.localizedDescription)
+
+                callback(-1, "unknown error: \(error.localizedDescription)")
             }
         }
     }
