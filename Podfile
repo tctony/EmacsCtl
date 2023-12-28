@@ -7,7 +7,7 @@ target 'EmacsCtl' do
   use_frameworks!
 
   # Pods for EmacsCtl
-  pod 'MASShortcut', '~> 2'
+  pod 'MASShortcut', '~> 2', :inhibit_warnings => true
 
 end
 
