@@ -70,6 +70,12 @@ class EmacsControl: NSObject {
     }
 
     static func restartEmacsDaemon(_ succeed: ((Bool) -> Void)? = nil) {
+        if !isRunning() {
+            os_log("Emacs is not running, start it directly")
+            startEmacsDaemon(succeed)
+            return
+        }
+
         stopEmacs { ok in
             if ok {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {

@@ -7,6 +7,7 @@
 
 import Cocoa
 import Combine
+import os.log
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -176,27 +177,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func createEmacsWindow(_ sender: NSMenuItem) {
-        print("create new emacs window");
+        os_log("create new emacs window");
         EmacsControl.newEmacsWindow()
     }
 
     @objc func restartEmacs(_ sender: NSMenuItem) {
-        print("restart emacs daemon");
+        os_log("restart emacs daemon");
         EmacsControl.restartEmacsDaemon()
     }
 
     @objc func stopEmacs(_ sender: NSMenuItem) {
-        print("stop emacs");
+        os_log("stop emacs");
         EmacsControl.stopEmacs()
     }
 
     @objc func startEmacs(_ sender: NSMenuItem) {
-        print("start emacs daemon");
+        os_log("start emacs daemon");
         EmacsControl.startEmacsDaemon()
     }
 
     @objc func quitEmacsCtl(_ sender: NSMenuItem) {
-        print("quit emacs ctl")
+        os_log("quit emacs ctl")
         NSApplication.shared.terminate(self)
     }
 }
