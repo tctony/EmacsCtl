@@ -39,6 +39,7 @@ class BaseWindowController: NSWindowController, NSWindowDelegate {
         closeCallbacks.forEach{ callback in
             callback()
         }
+        closeCallbacks.removeAll()
     }
 
     func onClose(callback: @escaping () -> Void) {

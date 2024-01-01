@@ -21,6 +21,10 @@
 		EA12CF3A2B25F3B7005033A8 /* LaunchAtLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12CF392B25F3B7005033A8 /* LaunchAtLogin.swift */; };
 		EA12CF3E2B25FE75005033A8 /* AppMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12CF3D2B25FE75005033A8 /* AppMenu.swift */; };
 		EA3DC4F62B2895F20015BE5E /* ShortcutsController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA3DC4F52B2895F20015BE5E /* ShortcutsController.m */; };
+		EAA4ACB92B426AC000E45784 /* UrlProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA4ACB82B426AC000E45784 /* UrlProcessor.swift */; };
+		EAA4ACBC2B426CB800E45784 /* OrgRoamCaptureWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA4ACBA2B426CB800E45784 /* OrgRoamCaptureWindow.swift */; };
+		EAA4ACBD2B426CB800E45784 /* OrgRoamCaptureWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = EAA4ACBB2B426CB800E45784 /* OrgRoamCaptureWindow.xib */; };
+		EAA4ACC02B426DA600E45784 /* UrlCaptureBaseWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA4ACBF2B426DA600E45784 /* UrlCaptureBaseWindow.swift */; };
 		EAB3302B2B221BD0006BC4DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB3302A2B221BD0006BC4DD /* AppDelegate.swift */; };
 		EAB3302D2B221BD0006BC4DD /* SettingWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB3302C2B221BD0006BC4DD /* SettingWindow.swift */; };
 		EAB3302F2B221BD1006BC4DD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EAB3302E2B221BD1006BC4DD /* Assets.xcassets */; };
@@ -67,6 +71,10 @@
 		EA3DC4ED2B287CE30015BE5E /* EmacsCtl-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EmacsCtl-Bridging-Header.h"; sourceTree = "<group>"; };
 		EA3DC4F42B2895F20015BE5E /* ShortcutsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShortcutsController.h; sourceTree = "<group>"; };
 		EA3DC4F52B2895F20015BE5E /* ShortcutsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShortcutsController.m; sourceTree = "<group>"; };
+		EAA4ACB82B426AC000E45784 /* UrlProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlProcessor.swift; sourceTree = "<group>"; };
+		EAA4ACBA2B426CB800E45784 /* OrgRoamCaptureWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrgRoamCaptureWindow.swift; sourceTree = "<group>"; };
+		EAA4ACBB2B426CB800E45784 /* OrgRoamCaptureWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OrgRoamCaptureWindow.xib; sourceTree = "<group>"; };
+		EAA4ACBF2B426DA600E45784 /* UrlCaptureBaseWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlCaptureBaseWindow.swift; sourceTree = "<group>"; };
 		EAB330272B221BD0006BC4DD /* EmacsCtl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmacsCtl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAB3302A2B221BD0006BC4DD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EAB3302C2B221BD0006BC4DD /* SettingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingWindow.swift; sourceTree = "<group>"; };
@@ -135,6 +143,7 @@
 				EA12CF372B25ECCE005033A8 /* BaseWindowController.swift */,
 				EAB3302C2B221BD0006BC4DD /* SettingWindow.swift */,
 				EA12CF302B25E1CF005033A8 /* SettingWindow.xib */,
+				EAA4ACBE2B426D7800E45784 /* Url */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -147,6 +156,16 @@
 				EA3DC4F52B2895F20015BE5E /* ShortcutsController.m */,
 			);
 			path = OC;
+			sourceTree = "<group>";
+		};
+		EAA4ACBE2B426D7800E45784 /* Url */ = {
+			isa = PBXGroup;
+			children = (
+				EAA4ACBF2B426DA600E45784 /* UrlCaptureBaseWindow.swift */,
+				EAA4ACBA2B426CB800E45784 /* OrgRoamCaptureWindow.swift */,
+				EAA4ACBB2B426CB800E45784 /* OrgRoamCaptureWindow.xib */,
+			);
+			path = Url;
 			sourceTree = "<group>";
 		};
 		EAB3301E2B221BD0006BC4DD = {
@@ -180,6 +199,7 @@
 				EAB3303A2B235712006BC4DD /* EmacsControl.swift */,
 				EA12CF1B2B25CA21005033A8 /* UI */,
 				EA12CF392B25F3B7005033A8 /* LaunchAtLogin.swift */,
+				EAA4ACB82B426AC000E45784 /* UrlProcessor.swift */,
 				EA1058C32B28417F0050DA91 /* Util.swift */,
 				EA3DC4F72B28963D0015BE5E /* OC */,
 				EA12CF162B255122005033A8 /* Localizable.strings */,
@@ -283,6 +303,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAA4ACBD2B426CB800E45784 /* OrgRoamCaptureWindow.xib in Resources */,
 				EAB3302F2B221BD1006BC4DD /* Assets.xcassets in Resources */,
 				EA12CF2E2B25E1CF005033A8 /* SettingWindow.xib in Resources */,
 				EA12CF142B255122005033A8 /* Localizable.strings in Resources */,
@@ -389,15 +410,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAA4ACB92B426AC000E45784 /* UrlProcessor.swift in Sources */,
 				EAB3302D2B221BD0006BC4DD /* SettingWindow.swift in Sources */,
 				EA12CF3A2B25F3B7005033A8 /* LaunchAtLogin.swift in Sources */,
 				EA12CF0E2B24D4F2005033A8 /* main.swift in Sources */,
+				EAA4ACBC2B426CB800E45784 /* OrgRoamCaptureWindow.swift in Sources */,
 				EA12CF382B25ECCE005033A8 /* BaseWindowController.swift in Sources */,
 				EAB3303D2B23571E006BC4DD /* ConfigStore.swift in Sources */,
 				4C4FB1372B26A85600C1645F /* UserDefaults.swift in Sources */,
 				EAB3302B2B221BD0006BC4DD /* AppDelegate.swift in Sources */,
 				EA3DC4F62B2895F20015BE5E /* ShortcutsController.m in Sources */,
 				EA1058C42B28417F0050DA91 /* Util.swift in Sources */,
+				EAA4ACC02B426DA600E45784 /* UrlCaptureBaseWindow.swift in Sources */,
 				EA12CF3E2B25FE75005033A8 /* AppMenu.swift in Sources */,
 				EAB3303B2B235712006BC4DD /* EmacsControl.swift in Sources */,
 			);

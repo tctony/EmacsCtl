@@ -33,7 +33,19 @@ class AppMenu: NSMenu {
                        keyEquivalent: "w"),
         ]
 
-        items = [mainMenu, fileMenu]
+
+        let editMenu = NSMenuItem()
+        editMenu.submenu = NSMenu(title: "Edit")
+        editMenu.submenu?.items = [
+            NSMenuItem(title: "Cut", action: #selector(NSText.cut(_:)), keyEquivalent: "x"),
+            NSMenuItem(title: "Copy", action: #selector(NSText.copy(_:)), keyEquivalent: "c"),
+            NSMenuItem(title: "Paste", action: #selector(NSText.paste(_:)), keyEquivalent: "v"),
+            NSMenuItem.separator(),
+            NSMenuItem(title: "Select All", action: #selector(NSText.selectAll(_:)), keyEquivalent: "a"),
+            NSMenuItem(title: "Delete", target: self, action: nil, keyEquivalent: "⌫", modifier: .init()),
+        ]
+
+        items = [mainMenu, fileMenu, editMenu ]
     }
 
     required init(coder: NSCoder) {

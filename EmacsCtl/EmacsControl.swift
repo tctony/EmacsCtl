@@ -121,7 +121,7 @@ class EmacsControl: NSObject {
     }
 
     static func handleUrl(_ url: String, _ succeed: ((Bool) -> Void)? = nil) {
-        runShellCommand(EmacsClient, ["-n", "\"\(url)\""]) { code, msg in
+        runShellCommand(EmacsClient, ["-n", url]) { code, msg in
             print("\(#function) result: \(code) \(msg)")
             if code == 0 {
                 focusOnEmacs(succeed)

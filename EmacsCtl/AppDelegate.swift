@@ -48,8 +48,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func application(_ application: NSApplication, open urls: [URL]) {
         for url in urls {
-            if (url.scheme == "org-protocol") {
-                EmacsControl.handleUrl(url.absoluteString)
+            if (url.scheme == UrlScheme) {
+                UrlProcessor.shared.process(url)
             }
         }
     }
