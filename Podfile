@@ -9,6 +9,8 @@ target 'EmacsCtl' do
   # Pods for EmacsCtl
   pod 'MASShortcut', '~> 2', :inhibit_warnings => true
 
+  pod 'Sparkle'
+
 end
 
 target 'LaunchHelper' do

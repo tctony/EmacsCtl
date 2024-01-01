@@ -19,6 +19,7 @@ class AppMenu: NSMenu {
             NSMenuItem(title: NSLocalizedString("about", comment: ""),
                        action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)),
                        keyEquivalent: ""),
+
             NSMenuItem.separator(),
             NSMenuItem(title: NSLocalizedString("quit", comment: ""),
                        action: #selector(NSApplication.shared.terminate(_:)),

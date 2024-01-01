@@ -8,12 +8,15 @@
 import Cocoa
 import Combine
 import os.log
+import Sparkle
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.variableLength)
 
     let menu: NSMenu = NSMenu()
+
+    private var updator: SPUStandardUpdaterController?
 
     var cancellable: AnyCancellable?
 
@@ -41,6 +44,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         statusItem.menu = menu;
+
+        self.updator = SPUStandardUpdaterController(updaterDelegate: nil, userDriverDelegate: nil)
 
         cancellable = ConfigStore.shared.$config.sink { [weak self] in
             print("config changed to: \($0)")
@@ -143,6 +148,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem(title: NSLocalizedString("setting", comment: ""),
                                 action: #selector(AppDelegate.showSettingWindow(_:)), 
                                 keyEquivalent: "e"))
+
+        menu.addItem(NSMenuItem(title: NSLocalizedString("check_update", comment: ""),
+                                target: self.updator!,
+                                action: #selector(SPUStandardUpdaterController.checkForUpdates(_:)),
+                                keyEquivalent: ""))
 
         menu.addItem(withTitle: NSLocalizedString("quit", comment: ""),
                      action: #selector(AppDelegate.quitEmacsCtl(_:)),
