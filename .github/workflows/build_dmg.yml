@@ -3,7 +3,7 @@ name: Build DMG
 on:
   push:
     branches:
-      - 'debug_update'
+      - 'debug-update'
   workflow_dispatch:
   workflow_call:
 
