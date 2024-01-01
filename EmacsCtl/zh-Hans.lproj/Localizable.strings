@@ -12,6 +12,7 @@
 "not_running" = "未运行";
 "start" = "运行";
 
+"starting" = "启动中";
 "running" = "运行在";
 "new_window" = "新建窗口";
 "restart" = "重启";

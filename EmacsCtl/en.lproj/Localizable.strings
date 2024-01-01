@@ -12,6 +12,7 @@
 "not_running" = "Not running";
 "start" = "Start";
 
+"starting" = "Starting at ";
 "running" = "Running at ";
 "new_window" = "New window";
 "restart" = "Restart";

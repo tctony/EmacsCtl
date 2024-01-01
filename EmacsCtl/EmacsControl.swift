@@ -16,7 +16,11 @@ class EmacsControl: NSObject {
     static let EmacsClient = "emacsclient"
 
     static func startEmacsDaemon(_ succeed: ((Bool) -> Void)? = nil) {
+        (NSApplication.shared.delegate as! AppDelegate).isDeamonStarting = true
+
         runShellCommand(Emacs, ["--daemon"]) { code, msg in
+            (NSApplication.shared.delegate as! AppDelegate).isDeamonStarting = false
+
             print("\(#function) result: \(code) \(msg)")
             if code == 0 {
                 newEmacsWindow(succeed)

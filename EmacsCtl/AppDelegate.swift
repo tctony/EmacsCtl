@@ -19,6 +19,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var pidFileObserver: DispatchSourceFileSystemObject?
 
+    var isDeamonStarting: Bool = false {
+        didSet {
+            refreshMenu(ConfigStore.shared.config)
+        }
+    }
+
     var settingWindowCtrl: SettingWindowController!
 
     // MARK: -
@@ -107,7 +113,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 let pidStr = try String(contentsOfFile: config.emacsPidFile!, encoding: .utf8)
                 print("content of pidFile: '\(pidStr)'")
                 if let pid = Int(pidStr), pid > 0 {
-                    runningItem.attributedTitle = makeStatusAttrString("\(NSLocalizedString("running", comment: "")) \(pid)")
+                    runningItem.attributedTitle = makeStatusAttrString(
+                        "\(NSLocalizedString(isDeamonStarting ? "starting" : "running", comment: "")) \(pid)"
+                    )
 
                     menu.addItem(NSMenuItem.separator())
                     menu.addItem(NSMenuItem(title: NSLocalizedString("new_window", comment: ""),
