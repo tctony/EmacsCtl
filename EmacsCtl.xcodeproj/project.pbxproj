@@ -635,8 +635,9 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0.2.0;
+				CURRENT_PROJECT_VERSION = "${EMACSCTL_VERSION}";
 				DEVELOPMENT_TEAM = "";
+				EMACSCTL_VERSION = 0.2.1;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EmacsCtl/Info.plist;
@@ -648,7 +649,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = "${EMACSCTL_VERSION}";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tctony.EmacsCtl;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -671,8 +672,9 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0.2.0;
+				CURRENT_PROJECT_VERSION = "${EMACSCTL_VERSION}";
 				DEVELOPMENT_TEAM = "";
+				EMACSCTL_VERSION = 0.2.1;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EmacsCtl/Info.plist;
@@ -684,7 +686,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = "${EMACSCTL_VERSION}";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tctony.EmacsCtl;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
