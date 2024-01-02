@@ -1,8 +1,8 @@
 name: Generate update.xml for Sparkle
 
 on:
-  push:
-    branches: ["debug-update"]
+  # push:
+  #   branches: ["debug-update"]
   workflow_call:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -43,7 +43,7 @@ jobs:
                 <title>Version ${{ env.Version }}</title>
                 <pubDate>$(date)</pubDate>
                 <sparkle:version>${{ env.Version }}</sparkle:version>
-                <enclosure url="https://github.com/tctony/EmacsCtl/releases/download/v${{ env.Version }}/EmacsCtl-v${{ env.Version }}.dmg" length="1496137" type="application/octet-stream"/>
+                <enclosure url="https://github.com/tctony/EmacsCtl/releases/download/v${{ env.Version }}/EmacsCtl-v${{ env.Version }}.dmg" type="application/octet-stream"/>
               </item>
             </channel>
           </rss>

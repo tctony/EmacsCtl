@@ -37,5 +37,9 @@ jobs:
         with:
           files: |
             ${{ env.DMG_FILE }}
+
+  update:
+    needs: release
+    uses: ./.github/workflows/update.yml
     
   
