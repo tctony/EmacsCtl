@@ -17,8 +17,6 @@ jobs:
 
     permissions:
       contents: write
-      pages: write
-      id-token: write
 
     steps:
       - name: Set dmg filename
@@ -42,6 +40,11 @@ jobs:
 
   update:
     needs: release
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     uses: ./.github/workflows/update.yml
+    secrets: inherit
     
   
