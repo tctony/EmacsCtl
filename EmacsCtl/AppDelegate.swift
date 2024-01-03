@@ -125,18 +125,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     menu.addItem(NSMenuItem.separator())
                     menu.addItem(NSMenuItem(title: NSLocalizedString("new_window", comment: ""),
                                             action: #selector(AppDelegate.createEmacsWindow(_:)), 
-                                            keyEquivalent: "f"))
+                                            keyEquivalent: ""))
                     menu.addItem(NSMenuItem(title: NSLocalizedString("stop", comment: ""),
                                             action: #selector(AppDelegate.stopEmacs(_:)), 
-                                            keyEquivalent: "d"))
+                                            keyEquivalent: ""))
                     menu.addItem(NSMenuItem(title: NSLocalizedString("restart", comment: ""),
                                             action: #selector(AppDelegate.restartEmacs(_:)),
-                                            keyEquivalent: "r"))
+                                            keyEquivalent: ""))
                 } else {
                     runningItem.attributedTitle = makeStatusAttrString("\(NSLocalizedString("not_running", comment: ""))")
+
+                    menu.addItem(NSMenuItem.separator())
                     menu.addItem(NSMenuItem(title: NSLocalizedString("start", comment: ""),
                                             action: #selector(AppDelegate.startEmacs(_:)),
-                                            keyEquivalent: "s"))
+                                            keyEquivalent: ""))
                 }
             } catch {
                 print("read pid file failed: \(error)")
@@ -147,7 +149,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: NSLocalizedString("setting", comment: ""),
                                 action: #selector(AppDelegate.showSettingWindow(_:)), 
-                                keyEquivalent: "e"))
+                                keyEquivalent: ""))
 
         menu.addItem(NSMenuItem(title: NSLocalizedString("check_update", comment: ""),
                                 target: self.updator!,
@@ -156,7 +158,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         menu.addItem(withTitle: NSLocalizedString("quit", comment: ""),
                      action: #selector(AppDelegate.quitEmacsCtl(_:)),
-                     keyEquivalent: "q")
+                     keyEquivalent: "")
 
 
         print("finish refreshing menu")
