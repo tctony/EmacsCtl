@@ -21,6 +21,8 @@ class SettingWindowController: BaseWindowController {
     override func windowDidLoad() {
         super.windowDidLoad()
 
+        self.window?.title = "EmacsCtl v\(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!)"
+
         if let filePath = ConfigStore.shared.config.emacsPidFile {
             pidFileTextField.stringValue = filePath
         }
