@@ -37,7 +37,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         print(Bundle.main.bundlePath)
 
         if let button = statusItem.button {
-            if let image = NSImage(named: "tray") {
+            if var image = NSImage(named: "tray") {
+                #if DEBUG
+                image = image.flipped(flipHorizontally: true)
+                #endif
                 image.isTemplate = true;
                 button.image = image
             }
