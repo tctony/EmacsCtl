@@ -3,8 +3,8 @@
 ### Features
 - Use menu on mac status bar to control(start, restart, new window...) emacs deamon process just like systemctl does on linux.
 - Activate emacs window with global shortcut.
-- Support `org-protocol` scheme so you don't need to create an applescript to do that.
-- Support edit title before url using `org-roam-protocol` was passing to emacs.
+- Support `org-protocol` scheme so you don't need to create an applescript app to do that.
+- Support edit captured content when using `org-roam-protocol`.
 
 ### Install
 
