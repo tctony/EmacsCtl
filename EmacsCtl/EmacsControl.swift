@@ -105,7 +105,13 @@ class EmacsControl: NSObject {
 
     @objc static func switchToEmacs() {
         guard isRunning() else {
-            displayError("switchToEmacs", -1, "Emacs is not running!")
+            // displayError("switchToEmacs", -1, "Emacs is not running!")
+            print("Emacs is not running, start it");
+            startEmacsDaemon { succeed in
+                if (!succeed) {
+                    displayError("switchToEmacs", -1, "Start emacs failed!");
+                }
+            }
             return
         }
 
