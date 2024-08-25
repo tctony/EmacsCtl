@@ -68,6 +68,9 @@
 		EA12CF3D2B25FE75005033A8 /* AppMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMenu.swift; sourceTree = "<group>"; };
 		EA12CF442B26075C005033A8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingWindow.strings; sourceTree = "<group>"; };
 		EA12CF452B26076F005033A8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SettingWindow.strings"; sourceTree = "<group>"; };
+		EA1C8CDB2C7AE539007BDBD7 /* version.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = version.xcconfig; sourceTree = "<group>"; };
+		EA1C8CE12C7AE833007BDBD7 /* EmacsCtl.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = EmacsCtl.debug.xcconfig; sourceTree = "<group>"; };
+		EA1C8CE22C7AE838007BDBD7 /* EmacsCtl.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = EmacsCtl.release.xcconfig; sourceTree = "<group>"; };
 		EA3DC4ED2B287CE30015BE5E /* EmacsCtl-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EmacsCtl-Bridging-Header.h"; sourceTree = "<group>"; };
 		EA3DC4F42B2895F20015BE5E /* ShortcutsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShortcutsController.h; sourceTree = "<group>"; };
 		EA3DC4F52B2895F20015BE5E /* ShortcutsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShortcutsController.m; sourceTree = "<group>"; };
@@ -148,6 +151,16 @@
 			path = UI;
 			sourceTree = "<group>";
 		};
+		EA1C8CE02C7AE77E007BDBD7 /* XCConfig */ = {
+			isa = PBXGroup;
+			children = (
+				EA1C8CDB2C7AE539007BDBD7 /* version.xcconfig */,
+				EA1C8CE12C7AE833007BDBD7 /* EmacsCtl.debug.xcconfig */,
+				EA1C8CE22C7AE838007BDBD7 /* EmacsCtl.release.xcconfig */,
+			);
+			path = XCConfig;
+			sourceTree = "<group>";
+		};
 		EA3DC4F72B28963D0015BE5E /* OC */ = {
 			isa = PBXGroup;
 			children = (
@@ -173,6 +186,7 @@
 			children = (
 				EAB330292B221BD0006BC4DD /* EmacsCtl */,
 				EA1058D32B284C9D0050DA91 /* LaunchHelper */,
+				EA1C8CE02C7AE77E007BDBD7 /* XCConfig */,
 				EAB330282B221BD0006BC4DD /* Products */,
 				3BE5BC39FE57BAC0B414E69C /* Pods */,
 				122179ADFB3436C841D485F4 /* Frameworks */,
@@ -625,7 +639,7 @@
 		};
 		EAB330372B221BD1006BC4DD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5240C02FDB74CA1DA49294B0 /* Pods-EmacsCtl.debug.xcconfig */;
+			baseConfigurationReference = EA1C8CE12C7AE833007BDBD7 /* EmacsCtl.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -637,7 +651,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = "${EMACSCTL_VERSION}";
 				DEVELOPMENT_TEAM = "";
-				EMACSCTL_VERSION = 0.2.3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EmacsCtl/Info.plist;
@@ -662,7 +675,7 @@
 		};
 		EAB330382B221BD1006BC4DD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 74078054E523D78E256A4704 /* Pods-EmacsCtl.release.xcconfig */;
+			baseConfigurationReference = EA1C8CE22C7AE838007BDBD7 /* EmacsCtl.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -674,7 +687,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = "${EMACSCTL_VERSION}";
 				DEVELOPMENT_TEAM = "";
-				EMACSCTL_VERSION = 0.2.3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EmacsCtl/Info.plist;
