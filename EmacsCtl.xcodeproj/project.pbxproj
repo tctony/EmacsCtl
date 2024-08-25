@@ -20,6 +20,7 @@
 		EA12CF382B25ECCE005033A8 /* BaseWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12CF372B25ECCE005033A8 /* BaseWindowController.swift */; };
 		EA12CF3A2B25F3B7005033A8 /* LaunchAtLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12CF392B25F3B7005033A8 /* LaunchAtLogin.swift */; };
 		EA12CF3E2B25FE75005033A8 /* AppMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA12CF3D2B25FE75005033A8 /* AppMenu.swift */; };
+		EA1C8CE42C7AEA60007BDBD7 /* version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EA1C8CE32C7AEA60007BDBD7 /* version.xcconfig */; };
 		EA3DC4F62B2895F20015BE5E /* ShortcutsController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA3DC4F52B2895F20015BE5E /* ShortcutsController.m */; };
 		EAA4ACB92B426AC000E45784 /* UrlProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA4ACB82B426AC000E45784 /* UrlProcessor.swift */; };
 		EAA4ACBC2B426CB800E45784 /* OrgRoamCaptureWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA4ACBA2B426CB800E45784 /* OrgRoamCaptureWindow.swift */; };
@@ -68,9 +69,9 @@
 		EA12CF3D2B25FE75005033A8 /* AppMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMenu.swift; sourceTree = "<group>"; };
 		EA12CF442B26075C005033A8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingWindow.strings; sourceTree = "<group>"; };
 		EA12CF452B26076F005033A8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SettingWindow.strings"; sourceTree = "<group>"; };
-		EA1C8CDB2C7AE539007BDBD7 /* version.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = version.xcconfig; sourceTree = "<group>"; };
 		EA1C8CE12C7AE833007BDBD7 /* EmacsCtl.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = EmacsCtl.debug.xcconfig; sourceTree = "<group>"; };
 		EA1C8CE22C7AE838007BDBD7 /* EmacsCtl.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = EmacsCtl.release.xcconfig; sourceTree = "<group>"; };
+		EA1C8CE32C7AEA60007BDBD7 /* version.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = version.xcconfig; sourceTree = "<group>"; };
 		EA3DC4ED2B287CE30015BE5E /* EmacsCtl-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EmacsCtl-Bridging-Header.h"; sourceTree = "<group>"; };
 		EA3DC4F42B2895F20015BE5E /* ShortcutsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShortcutsController.h; sourceTree = "<group>"; };
 		EA3DC4F52B2895F20015BE5E /* ShortcutsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShortcutsController.m; sourceTree = "<group>"; };
@@ -154,7 +155,6 @@
 		EA1C8CE02C7AE77E007BDBD7 /* XCConfig */ = {
 			isa = PBXGroup;
 			children = (
-				EA1C8CDB2C7AE539007BDBD7 /* version.xcconfig */,
 				EA1C8CE12C7AE833007BDBD7 /* EmacsCtl.debug.xcconfig */,
 				EA1C8CE22C7AE838007BDBD7 /* EmacsCtl.release.xcconfig */,
 			);
@@ -184,6 +184,7 @@
 		EAB3301E2B221BD0006BC4DD = {
 			isa = PBXGroup;
 			children = (
+				EA1C8CE32C7AEA60007BDBD7 /* version.xcconfig */,
 				EAB330292B221BD0006BC4DD /* EmacsCtl */,
 				EA1058D32B284C9D0050DA91 /* LaunchHelper */,
 				EA1C8CE02C7AE77E007BDBD7 /* XCConfig */,
@@ -319,6 +320,7 @@
 			files = (
 				EAA4ACBD2B426CB800E45784 /* OrgRoamCaptureWindow.xib in Resources */,
 				EAB3302F2B221BD1006BC4DD /* Assets.xcassets in Resources */,
+				EA1C8CE42C7AEA60007BDBD7 /* version.xcconfig in Resources */,
 				EA12CF2E2B25E1CF005033A8 /* SettingWindow.xib in Resources */,
 				EA12CF142B255122005033A8 /* Localizable.strings in Resources */,
 			);

@@ -8,5 +8,8 @@
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
 
-// 发布新版时，修改这里的版本号，然后推送main分支即可。
+// 发布新版时
+//   - 修改这里的版本号
+//   - 打tag
+//   - 将tag推送到github
 EMACSCTL_VERSION = 0.2.4

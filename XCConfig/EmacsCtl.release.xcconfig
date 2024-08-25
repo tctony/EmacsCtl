@@ -8,5 +8,5 @@
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
 
-#include "XCConfig/version.xcconfig"
+#include "version.xcconfig"
 #include "Pods/Target Support Files/Pods-EmacsCtl/Pods-EmacsCtl.release.xcconfig"
