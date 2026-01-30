@@ -106,34 +106,37 @@ class EmacsControl: NSObject {
 
         if isRunning() {
             Logger.debug("emacs is running")
-
-            // Check if custom focus code is configured
-            if let focusCode = ConfigStore.shared.config.focusCode,
-               !focusCode.isEmpty {
-                Logger.debug("using custom focus code: \(focusCode)")
-                runShellCommand(EmacsClient, buildEmacsClientArgs(["--eval", focusCode])) { code, msg in
-                    Logger.info("focusOnEmacs (custom) result: \(code) \(msg)")
-                    if code == 0 {
-                        succeed?(true)
-                    } else {
-                        displayError("focusOnEmacs", code, msg)
-                        succeed?(false)
+            
+            if isFrontMost() {
+                if let focusCode = ConfigStore.shared.config.focusCode,
+                   !focusCode.isEmpty {
+                    Logger.debug("using custom focus code: \(focusCode)")
+                    runShellCommand(EmacsClient, buildEmacsClientArgs(["--eval", focusCode])) { code, msg in
+                        Logger.info("focusOnEmacs (custom) result: \(code) \(msg)")
+                        if code == 0 {
+                            succeed?(true)
+                        } else {
+                            displayError("focusOnEmacs", code, msg)
+                            succeed?(false)
+                        }
                     }
+                    return
                 }
-                return
-            }
 
-            // Fallback to default behavior: bring Emacs app to front
-            if let appURL = workspace.urlForApplication(withBundleIdentifier: EmacsBundleId) {
-                Logger.debug("focus on running emacs")
-                workspace.openApplication(at: appURL, configuration: .init())
-
-                succeed?(true)
-                return
             } else {
-                Logger.debug("emacs is not running")
+                // Fallback to default behavior: bring Emacs app to front
+                if let appURL = workspace.urlForApplication(withBundleIdentifier: EmacsBundleId) {
+                    Logger.debug("focus on running emacs")
+                    workspace.openApplication(at: appURL, configuration: .init())
+                    
+                    succeed?(true)
+                    return
+                } else {
+                    Logger.debug("emacs is not running")
+                }
             }
         }
+        
         succeed?(false)
     }
 
