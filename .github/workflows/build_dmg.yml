@@ -14,7 +14,7 @@ jobs:
   build-dmg:
     needs: build-app
 
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
       - name: Download App
@@ -28,7 +28,7 @@ jobs:
       - name: Set Xcode version
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '14.2'
+          xcode-version: '16.2'
 
       - name: Install Cert
         uses: apple-actions/import-codesign-certs@v2

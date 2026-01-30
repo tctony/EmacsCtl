@@ -1,6 +1,12 @@
 name: Release
 
 on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g., v1.0.0)'
+        required: true
+        type: string
   push:
     tags:
       - "v*.*.*"
@@ -12,7 +18,7 @@ jobs:
 
   release:
     needs: create-dmg
-    
+
     runs-on: ubuntu-latest
 
     permissions:
@@ -21,13 +27,18 @@ jobs:
     steps:
       - name: Set dmg filename
         run: |
-          DMG_FILE="EmacsCtl-${GITHUB_REF#refs/tags/}.dmg"
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            TAG="${{ github.event.inputs.tag }}"
+          else
+            TAG="${GITHUB_REF#refs/tags/}"
+          fi
+          DMG_FILE="EmacsCtl-${TAG}.dmg"
           echo "DMG_FILE: $DMG_FILE"
           echo "DMG_FILE=$DMG_FILE" >> $GITHUB_ENV
         env:
           GITHUB_REF: ${{ github.ref }}
 
-      - name: Dowonload dmg
+      - name: Download dmg
         uses: actions/download-artifact@v3
         with:
           name: ${{ env.DMG_FILE }}
@@ -35,6 +46,7 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
           files: |
             ${{ env.DMG_FILE }}
 
@@ -46,5 +58,3 @@ jobs:
       id-token: write
     uses: ./.github/workflows/update.yml
     secrets: inherit
-    
-  
