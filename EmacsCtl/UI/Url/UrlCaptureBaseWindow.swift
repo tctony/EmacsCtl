@@ -6,7 +6,6 @@
 //
 
 import Cocoa
-import os.log
 
 class UrlCaptureBaseWindow: BaseWindowController {
 
@@ -16,7 +15,7 @@ class UrlCaptureBaseWindow: BaseWindowController {
 
     public var url: URL? {
         didSet {
-            os_log("start edit captured url: %s", type: .info, url?.absoluteString ?? "")
+            Logger.info("start edit captured url: \(url?.absoluteString ?? "")")
             unpackUrl()
         }
     }
@@ -34,7 +33,7 @@ class UrlCaptureBaseWindow: BaseWindowController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             let url = self.packUrl()
 
-            os_log("did commit capture url: %s", type: .info, url)
+            Logger.info("did commit capture url: \(url)")
 
             EmacsControl.handleUrl(url)
 
@@ -43,7 +42,7 @@ class UrlCaptureBaseWindow: BaseWindowController {
     }
 
     @IBAction func onCancel(_ sender: Any) {
-        os_log("did cancel capture url")
+        Logger.info("did cancel capture url")
 
         close()
     }

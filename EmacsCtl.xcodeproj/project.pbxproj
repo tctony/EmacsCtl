@@ -10,6 +10,7 @@
 		12DA3B2DE2D1672F0DE1F5A1 /* Pods_LaunchHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE368BC7432E99E5953AFF41 /* Pods_LaunchHelper.framework */; };
 		4C4FB1372B26A85600C1645F /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4FB1362B26A85600C1645F /* UserDefaults.swift */; };
 		AC009B956B6A90530EBAD944 /* Pods_EmacsCtl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A118323E293486D04AE87A2 /* Pods_EmacsCtl.framework */; };
+		CB0000012B28417F0050DA91 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0000002B28417F0050DA91 /* Logger.swift */; };
 		EA1058C42B28417F0050DA91 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1058C32B28417F0050DA91 /* Util.swift */; };
 		EA1058D52B284C9D0050DA91 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1058D42B284C9D0050DA91 /* AppDelegate.swift */; };
 		EA1058E12B284D6E0050DA91 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1058E02B284D6E0050DA91 /* main.swift */; };
@@ -55,6 +56,7 @@
 		A00A46F90E239768066C99B8 /* Pods-LaunchHelper.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaunchHelper.debug.xcconfig"; path = "Target Support Files/Pods-LaunchHelper/Pods-LaunchHelper.debug.xcconfig"; sourceTree = "<group>"; };
 		DE368BC7432E99E5953AFF41 /* Pods_LaunchHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LaunchHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA1058C32B28417F0050DA91 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		CB0000002B28417F0050DA91 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		EA1058D22B284C9D0050DA91 /* LaunchHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LaunchHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA1058D42B284C9D0050DA91 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EA1058DB2B284C9F0050DA91 /* LaunchHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LaunchHelper.entitlements; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 				EA12CF392B25F3B7005033A8 /* LaunchAtLogin.swift */,
 				EAA4ACB82B426AC000E45784 /* UrlProcessor.swift */,
 				EA1058C32B28417F0050DA91 /* Util.swift */,
+				CB0000002B28417F0050DA91 /* Logger.swift */,
 				EA3DC4F72B28963D0015BE5E /* OC */,
 				EA12CF162B255122005033A8 /* Localizable.strings */,
 				EAB3302E2B221BD1006BC4DD /* Assets.xcassets */,
@@ -437,6 +440,7 @@
 				EAB3302B2B221BD0006BC4DD /* AppDelegate.swift in Sources */,
 				EA3DC4F62B2895F20015BE5E /* ShortcutsController.m in Sources */,
 				EA1058C42B28417F0050DA91 /* Util.swift in Sources */,
+				CB0000012B28417F0050DA91 /* Logger.swift in Sources */,
 				EAA4ACC02B426DA600E45784 /* UrlCaptureBaseWindow.swift in Sources */,
 				EA12CF3E2B25FE75005033A8 /* AppMenu.swift in Sources */,
 				EAB3303B2B235712006BC4DD /* EmacsControl.swift in Sources */,

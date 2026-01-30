@@ -7,7 +7,6 @@
 
 import Cocoa
 import Combine
-import os.log
 import Sparkle
 
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -33,8 +32,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: -
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        print("did launch as agent")
-        print(Bundle.main.bundlePath)
+        Logger.info("did launch as agent")
+        Logger.info("bundle path: \(Bundle.main.bundlePath)")
 
         if let button = statusItem.button {
             if var image = NSImage(named: "tray") {
@@ -51,7 +50,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.updator = SPUStandardUpdaterController(updaterDelegate: nil, userDriverDelegate: nil)
 
         cancellable = ConfigStore.shared.$config.sink { [weak self] in
-            print("config changed to: \($0)")
+            Logger.debug("config changed to: \($0)")
             self?.rescheduleObserver($0)
             self?.refreshMenu($0)
         }
@@ -90,18 +89,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let fd = open(url.path, O_EVTONLY)
         pidFileObserver = DispatchSource.makeFileSystemObjectSource(fileDescriptor: fd, eventMask: .all)
         pidFileObserver?.setEventHandler { [weak self] in
-            print("pid file changed")
+            Logger.debug("pid file changed")
             self?.refreshMenu(config)
         }
         pidFileObserver?.setCancelHandler {
             close(fd)
         }
         pidFileObserver?.resume()
-        print("monitoring pid file change")
+        Logger.info("monitoring pid file change")
     }
 
     func refreshMenu(_ config: Config) {
-        print("refreshing menu")
+        Logger.debug("refreshing menu")
 
         menu.removeAllItems()
 
@@ -119,7 +118,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
             do {
                 let pidStr = try String(contentsOfFile: config.emacsPidFile!, encoding: .utf8)
-                print("content of pidFile: '\(pidStr)'")
+                Logger.debug("content of pidFile: '\(pidStr)'")
                 if let pid = Int(pidStr), pid > 0 {
                     runningItem.attributedTitle = makeStatusAttrString(
                         "\(NSLocalizedString(isDeamonStarting ? "starting" : "running", comment: "")) \(pid)"
@@ -144,7 +143,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                             keyEquivalent: ""))
                 }
             } catch {
-                print("read pid file failed: \(error)")
+                Logger.error("read pid file failed: \(error)")
                 menu.removeItem(runningItem)
             }
         }
@@ -164,7 +163,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                      keyEquivalent: "")
 
 
-        print("finish refreshing menu")
+        Logger.debug("finish refreshing menu")
     }
 
     func showSettingIfFirstLaunch() {
@@ -180,7 +179,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func showSettingWindow(_ sender: NSMenuItem?) {
-        print("show configure window")
+        Logger.info("show configure window")
 
         if settingWindowCtrl != nil {
             NSApp.activate(ignoringOtherApps: true)
@@ -200,27 +199,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func createEmacsWindow(_ sender: NSMenuItem) {
-        os_log("create new emacs window");
+        Logger.info("create new emacs window")
         EmacsControl.newEmacsWindow()
     }
 
     @objc func restartEmacs(_ sender: NSMenuItem) {
-        os_log("restart emacs daemon");
+        Logger.info("restart emacs daemon")
         EmacsControl.restartEmacsDaemon()
     }
 
     @objc func stopEmacs(_ sender: NSMenuItem) {
-        os_log("stop emacs");
+        Logger.info("stop emacs")
         EmacsControl.stopEmacs()
     }
 
     @objc func startEmacs(_ sender: NSMenuItem) {
-        os_log("start emacs daemon");
+        Logger.info("start emacs daemon")
         EmacsControl.startEmacsDaemon()
     }
 
     @objc func quitEmacsCtl(_ sender: NSMenuItem) {
-        os_log("quit emacs ctl")
+        Logger.info("quit emacs ctl")
         NSApplication.shared.terminate(self)
     }
 }

@@ -6,7 +6,6 @@
 //
 
 import Cocoa
-import os.log
 
 @objc
 class OrgRoamCaptureWindow: UrlCaptureBaseWindow {
@@ -28,7 +27,7 @@ class OrgRoamCaptureWindow: UrlCaptureBaseWindow {
 
     override func unpackUrl() {
         if (url == nil) {
-            print("url is nil")
+            Logger.warning("url is nil")
             return
         }
 
@@ -42,7 +41,7 @@ class OrgRoamCaptureWindow: UrlCaptureBaseWindow {
                     case "title": self.title = item.value ?? ""
                     case "body": self.body = item.value ?? ""
                     default:
-                        os_log("unknwon param: %s=%s", type: .info, item.name, item.value ?? "")
+                        Logger.debug("unknown param: \(item.name)=\(item.value ?? "")")
                         unknownItems.append(item)
                     }
                 }

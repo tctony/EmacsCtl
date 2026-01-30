@@ -56,14 +56,14 @@ class SettingWindowController: BaseWindowController {
         if openPanel.runModal() == NSApplication.ModalResponse.OK {
             if let url = openPanel.url {
                 let filePath = url.path
-                print("did select pid file path: \(filePath)")
+                Logger.debug("did select pid file path: \(filePath)")
 
                 pidFileTextField.stringValue = filePath
 
                 ConfigStore.shared.setPidFile(filePath)
             }
         } else {
-            print("select pid file path not ok")
+            Logger.debug("select pid file path not ok")
         }
     }
 
@@ -80,25 +80,25 @@ class SettingWindowController: BaseWindowController {
         if openPanel.runModal() == NSApplication.ModalResponse.OK {
             if let url = openPanel.url {
                 let directoryPath = url.path
-                print("did selecte install dir: \(directoryPath)")
+                Logger.debug("did selecte install dir: \(directoryPath)")
 
                 installDirTextField.stringValue = directoryPath
 
                 ConfigStore.shared.setInstallDir(directoryPath)
             }
         } else {
-            print("select install dir not ok")
+            Logger.debug("select install dir not ok")
         }
     }
 
     @IBAction func focusCodeDidChange(_ sender: Any) {
         let focusCode = focusCodeTextField.stringValue
-        print("focus code changed: \(focusCode)")
+        Logger.debug("focus code changed: \(focusCode)")
         ConfigStore.shared.setFocusCode(focusCode)
     }
 
     @objc func resetData(_ sender: Any?) {
-        print("reset data");
+        Logger.info("reset data")
         let domain = Bundle.main.bundleIdentifier!
         UserDefaults.standard.removePersistentDomain(forName: domain)
         ConfigStore.shared.config = Config()

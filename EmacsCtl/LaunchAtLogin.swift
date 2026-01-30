@@ -12,7 +12,7 @@ class LaunchAtLogin: NSObject {
 
     @objc var isEnabled: Bool {
         didSet {
-            print("launch at login changed to \(isEnabled)")
+            Logger.info("launch at login changed to \(isEnabled)")
             onChange()
         }
     }

@@ -23,7 +23,7 @@ func displayNotification(_ content: UNNotificationContent) {
                 }
             }
         case .denied:
-            print("can't display notification")
+            Logger.warning("can't display notification")
         default: // take rest as granted
             display()
         }
