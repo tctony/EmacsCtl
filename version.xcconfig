@@ -12,4 +12,4 @@
 //   - 修改这里的版本号
 //   - 打tag
 //   - 将tag推送到github
-EMACSCTL_VERSION = 0.2.6
+EMACSCTL_VERSION = 0.2.7
