@@ -14,4 +14,6 @@ class UserDefaultsKeys {
     static let didShowSettingOnFirstLaunch = "didShowSettingOnFirstLaunch"
 
     static let launchAtLogin = "launch_at_login"
+
+    static let focusCode = "focus_code"
 }

@@ -13,3 +13,9 @@
 
 /* Class = "NSTextFieldCell"; title = "Pid File Path:"; ObjectID = "s2g-7h-IVr"; */
 "s2g-7h-IVr.title" = "Pid文件路径:";
+
+/* Class = "NSTextFieldCell"; title = "Custom Focus Code (optional):"; ObjectID = "FCT-lbl-cell-001"; */
+"FCT-lbl-cell-001.title" = "自定义聚焦代码 (可选):";
+
+/* Class = "NSTextFieldCell"; placeholderString = "e.g. (tctony/focus-on-main-frame)"; ObjectID = "FCT-xx-cell-001"; */
+"FCT-xx-cell-001.placeholderString" = "例如 (tctony/focus-on-main-frame)";
