@@ -14,6 +14,8 @@ class SettingWindowController: BaseWindowController {
 
     @IBOutlet var installDirTextField: NSTextField!
 
+    @IBOutlet var focusCodeTextField: NSTextField!
+
     override class var displayInDock: Bool {
         return true
     }
@@ -28,6 +30,9 @@ class SettingWindowController: BaseWindowController {
         }
         if let dir = ConfigStore.shared.config.emacsInstallDir {
             installDirTextField.stringValue = dir
+        }
+        if let focusCode = ConfigStore.shared.config.focusCode {
+            focusCodeTextField.stringValue = focusCode
         }
 
         #if DEBUG
@@ -84,6 +89,12 @@ class SettingWindowController: BaseWindowController {
         } else {
             print("select install dir not ok")
         }
+    }
+
+    @IBAction func focusCodeDidChange(_ sender: Any) {
+        let focusCode = focusCodeTextField.stringValue
+        print("focus code changed: \(focusCode)")
+        ConfigStore.shared.setFocusCode(focusCode)
     }
 
     @objc func resetData(_ sender: Any?) {

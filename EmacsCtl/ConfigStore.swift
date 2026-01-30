@@ -13,6 +13,8 @@ struct Config {
     var emacsPidFile: String?
 
     var emacsInstallDir: String?
+
+    var focusCode: String?
 }
 
 
@@ -26,7 +28,8 @@ class ConfigStore {
 
     private init() {
         config = Config(emacsPidFile: store.string(forKey: UserDefaultsKeys.pidFile),
-                        emacsInstallDir: store.string(forKey: UserDefaultsKeys.installDir))
+                        emacsInstallDir: store.string(forKey: UserDefaultsKeys.installDir),
+                        focusCode: store.string(forKey: UserDefaultsKeys.focusCode))
     }
 
     func setPidFile(_ pidFile: String) {
@@ -41,5 +44,12 @@ class ConfigStore {
         store.synchronize()
         
         config.emacsInstallDir = installDir
+    }
+
+    func setFocusCode(_ focusCode: String) {
+        store.set(focusCode, forKey: UserDefaultsKeys.focusCode)
+        store.synchronize()
+
+        config.focusCode = focusCode
     }
 }

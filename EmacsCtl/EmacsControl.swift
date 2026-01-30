@@ -48,6 +48,24 @@ class EmacsControl: NSObject {
 
         if isRunning() {
             print("emacs is running")
+
+            // Check if custom focus code is configured
+            if let focusCode = ConfigStore.shared.config.focusCode,
+               !focusCode.isEmpty {
+                print("using custom focus code: \(focusCode)")
+                runShellCommand(EmacsClient, ["--eval", focusCode]) { code, msg in
+                    print("focusOnEmacs (custom) result: \(code) \(msg)")
+                    if code == 0 {
+                        succeed?(true)
+                    } else {
+                        displayError("focusOnEmacs", code, msg)
+                        succeed?(false)
+                    }
+                }
+                return
+            }
+
+            // Fallback to default behavior: bring Emacs app to front
             if let appURL = workspace.urlForApplication(withBundleIdentifier: EmacsBundleId) {
                 print("focus on running emacs")
                 workspace.openApplication(at: appURL, configuration: .init())
@@ -119,11 +137,6 @@ class EmacsControl: NSObject {
             return $0.bundleIdentifier == EmacsBundleId
         }) else {
             displayError("switchToEmacs", -1, "Emacs is not running!")
-            return
-        }
-
-        if isFrontMost() {
-            minimizeEmacs()
             return
         }
 
