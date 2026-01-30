@@ -18,7 +18,7 @@ class EmacsControl: NSObject {
     static func startEmacsDaemon(_ succeed: ((Bool) -> Void)? = nil) {
         (NSApplication.shared.delegate as! AppDelegate).isDeamonStarting = true
 
-        runShellCommand(Emacs, ["--daemon"]) { code, msg in
+        runShellCommand(Emacs, ["--daemon", "&"]) { code, msg in
             (NSApplication.shared.delegate as! AppDelegate).isDeamonStarting = false
 
             print("\(#function) result: \(code) \(msg)")
@@ -32,7 +32,8 @@ class EmacsControl: NSObject {
     }
 
     static func newEmacsWindow(_ succeed: ((Bool) -> Void)? = nil) {
-        runShellCommand(EmacsClient, ["-c", "-n"]) { code, msg in
+        // Use --eval to explicitly create a macOS GUI frame (ns = NextStep/Cocoa)
+        runShellCommand(EmacsClient, ["-n", "--eval", "(make-frame '((window-system . ns)))"]) { code, msg in
             print("\(#function) result: \(code) \(msg)")
             if code == 0 {
                 focusOnEmacs(succeed)
@@ -191,6 +192,11 @@ class EmacsControl: NSObject {
                 let process = Process()
                 process.launchPath = "\(ConfigStore.shared.config.emacsInstallDir!)/\(binary)"
                 process.arguments = arguments
+                
+                // Set environment variables to avoid "Unknown terminal type" error
+                var env = ProcessInfo.processInfo.environment
+                env["TERM"] = env["TERM"] ?? "xterm-256color"
+                process.environment = env
                 
                 os_log("run command: %s %s", type: .info, process.launchPath ?? "",
                        (process.arguments ?? []).joined(separator: " "))
