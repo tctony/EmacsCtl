@@ -90,7 +90,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         pidFileObserver = DispatchSource.makeFileSystemObjectSource(fileDescriptor: fd, eventMask: .all)
         pidFileObserver?.setEventHandler { [weak self] in
             Logger.debug("pid file changed")
-            self?.refreshMenu(config)
+            DispatchQueue.main.async {
+                self?.refreshMenu(config)
+            }
         }
         pidFileObserver?.setCancelHandler {
             close(fd)
