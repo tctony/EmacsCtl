@@ -35,6 +35,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         Logger.info("did launch as agent")
         Logger.info("bundle path: \(Bundle.main.bundlePath)")
 
+        statusItem.isVisible = true
+
         if let button = statusItem.button {
             if var image = NSImage(named: "tray") {
                 #if DEBUG
