@@ -8,11 +8,9 @@ set shell := ["bash", "-cu"]
 VERSION_FILE := "version.xcconfig"
 VERSION_VAR := "EMACSCTL_VERSION"
 
-# Show current version
-version:
-    @just get-version
+help:
+    @just -l
 
-# Helper to get current version
 get-version:
     @grep -E "^{{VERSION_VAR}} =" "{{VERSION_FILE}}" | cut -d'=' -f2 | xargs
 
