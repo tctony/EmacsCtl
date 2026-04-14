@@ -194,19 +194,16 @@ class EmacsControl: NSObject {
             return
         }
 
-        guard let app = NSWorkspace.shared.runningApplications.first(where: {
-            return $0.bundleIdentifier == EmacsBundleId
-        }) else {
-            displayError("switchToEmacs", -1, "Emacs is not running!")
-            return
-        }
-
-        let windowListInfo = CGWindowListCopyWindowInfo(.optionAll, kCGNullWindowID) as! [[String: Any]]
-        let windowIDs = windowListInfo.compactMap { $0[kCGWindowOwnerPID as String] as? Int }
-        if windowIDs.contains(numericCast(app.processIdentifier)) {
-            focusOnEmacs()
-        } else {
-            newEmacsWindow()
+        let elisp = #"(if (seq-find (lambda (f) (and (frame-parameter f 'window-system) (frame-visible-p f))) (frame-list)) "t" "nil")"#
+        runShellCommand(EmacsClient, buildEmacsClientArgs(["--eval", elisp])) { code, stdout, stderr in
+            if code == 0 && stdout.contains("t") {
+                focusOnEmacs()
+            } else {
+                if code != 0 {
+                    Logger.error("switchToEmacs eval failed: \(stderr)")
+                }
+                newEmacsWindow()
+            }
         }
     }
 
@@ -292,10 +289,18 @@ class EmacsControl: NSObject {
     static func runShellCommand(_ binary: String,
                                 _ arguments: [String] ,
                                 completion: @escaping ((Int32, String) -> Void)) {
+        runShellCommand(binary, arguments) { code, stdout, stderr in
+            completion(code, stderr)
+        }
+    }
+
+    static func runShellCommand(_ binary: String,
+                                _ arguments: [String],
+                                fullCompletion: @escaping ((Int32, String, String) -> Void)) {
         let queue = DispatchQueue.global()
-        let callback: (Int32, String) -> Void = { code, msg in
+        let callback: (Int32, String, String) -> Void = { code, stdout, stderr in
             DispatchQueue.main.async {
-                completion(code, msg)
+                fullCompletion(code, stdout, stderr)
             }
         }
         queue.async {
@@ -304,13 +309,13 @@ class EmacsControl: NSObject {
                 process.launchPath = "\(ConfigStore.shared.config.emacsInstallDir!)/\(binary)"
                 process.arguments = arguments
                 
-                // Set environment variables to avoid "Unknown terminal type" error
                 var env = ProcessInfo.processInfo.environment
                 env["TERM"] = env["TERM"] ?? "xterm-256color"
                 process.environment = env
                 
-                // Capture stderr to get error messages
+                let stdoutPipe = Pipe()
                 let stderrPipe = Pipe()
+                process.standardOutput = stdoutPipe
                 process.standardError = stderrPipe
                 
                 Logger.info("run command: \(process.launchPath ?? "") \((process.arguments ?? []).joined(separator: " "))")
@@ -318,24 +323,28 @@ class EmacsControl: NSObject {
                 try process.run()
                 process.waitUntilExit()
                 
-                // Read stderr output
+                let stdoutData = stdoutPipe.fileHandleForReading.readDataToEndOfFile()
+                let stdoutOutput = String(data: stdoutData, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
                 let stderrData = stderrPipe.fileHandleForReading.readDataToEndOfFile()
                 let stderrOutput = String(data: stderrData, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 
                 Logger.info("run command finished. status \(process.terminationStatus)")
+                if !stdoutOutput.isEmpty {
+                    Logger.debug("stdout: \(stdoutOutput)")
+                }
                 if !stderrOutput.isEmpty {
                     Logger.debug("stderr: \(stderrOutput)")
                 }
 
-                callback(process.terminationStatus, stderrOutput)
+                callback(process.terminationStatus, stdoutOutput, stderrOutput)
             } catch let error as NSError {
                 Logger.error("run command error: \(error.localizedDescription)")
 
-                callback(numericCast(error.code), error.localizedDescription)
+                callback(numericCast(error.code), "", error.localizedDescription)
             } catch {
                 Logger.error("run command error: \(error.localizedDescription)")
 
-                callback(-1, "unknown error: \(error.localizedDescription)")
+                callback(-1, "", "unknown error: \(error.localizedDescription)")
             }
         }
     }
