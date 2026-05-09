@@ -15,12 +15,26 @@ struct Config {
     var emacsInstallDir: String?
 
     var focusCode: String?
+
+    var fileExtensions: String?
+
+    /// Elisp function symbol invoked when EmacsCtl opens a file from
+    /// LaunchServices and the file is inside a git repo. Default:
+    /// `tctony/persp-switch-by-git-dir`. An empty value disables this and
+    /// falls back to `emacsclient -n <file>`.
+    var gitOpenFunction: String?
 }
 
 
 class ConfigStore {
 
     static let shared = ConfigStore()
+
+    static let defaultFocusCode = "(tctony/toggle-between-emacs-and-cmux)"
+
+    static let defaultGitOpenFunction = "tctony/persp-switch-by-git-dir"
+
+    static let defaultFileExtensions = "h,c,cpp,rs,ts,tsx,js,py"
 
     @Published var config: Config
 
@@ -29,7 +43,12 @@ class ConfigStore {
     private init() {
         config = Config(emacsPidFile: store.string(forKey: UserDefaultsKeys.pidFile),
                         emacsInstallDir: store.string(forKey: UserDefaultsKeys.installDir),
-                        focusCode: store.string(forKey: UserDefaultsKeys.focusCode))
+                        focusCode: store.string(forKey: UserDefaultsKeys.focusCode)
+                            ?? ConfigStore.defaultFocusCode,
+                        fileExtensions: store.string(forKey: UserDefaultsKeys.fileExtensions)
+                            ?? ConfigStore.defaultFileExtensions,
+                        gitOpenFunction: store.string(forKey: UserDefaultsKeys.gitOpenFunction)
+                            ?? ConfigStore.defaultGitOpenFunction)
     }
 
     func setPidFile(_ pidFile: String) {
@@ -51,5 +70,19 @@ class ConfigStore {
         store.synchronize()
 
         config.focusCode = focusCode
+    }
+
+    func setFileExtensions(_ fileExtensions: String) {
+        store.set(fileExtensions, forKey: UserDefaultsKeys.fileExtensions)
+        store.synchronize()
+
+        config.fileExtensions = fileExtensions
+    }
+
+    func setGitOpenFunction(_ gitOpenFunction: String) {
+        store.set(gitOpenFunction, forKey: UserDefaultsKeys.gitOpenFunction)
+        store.synchronize()
+
+        config.gitOpenFunction = gitOpenFunction
     }
 }

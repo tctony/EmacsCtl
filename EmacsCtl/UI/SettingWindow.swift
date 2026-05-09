@@ -16,6 +16,10 @@ class SettingWindowController: BaseWindowController {
 
     @IBOutlet var focusCodeTextField: NSTextField!
 
+    @IBOutlet var gitOpenFunctionTextField: NSTextField!
+
+    @IBOutlet var fileExtensionsTextField: NSTextField!
+
     override class var displayInDock: Bool {
         return true
     }
@@ -34,12 +38,22 @@ class SettingWindowController: BaseWindowController {
         if let focusCode = ConfigStore.shared.config.focusCode {
             focusCodeTextField.stringValue = focusCode
         }
+        if let gitFn = ConfigStore.shared.config.gitOpenFunction {
+            gitOpenFunctionTextField.stringValue = gitFn
+        }
+        if let exts = ConfigStore.shared.config.fileExtensions {
+            fileExtensionsTextField.stringValue = exts
+        }
 
         #if DEBUG
         let button = NSButton(title: "reset", target: self, action: #selector(resetData(_:)))
         button.sizeToFit()
-        button.frame.origin.x = window!.frame.size.width - button.frame.size.width
-        window?.contentView?.addSubview(button)
+        if let contentView = window?.contentView {
+            button.frame.origin.x = contentView.bounds.size.width - button.frame.size.width - 4
+            button.frame.origin.y = contentView.bounds.size.height - button.frame.size.height - 4
+            button.autoresizingMask = [.minXMargin, .minYMargin]
+            contentView.addSubview(button)
+        }
         #endif
     }
 
@@ -95,6 +109,26 @@ class SettingWindowController: BaseWindowController {
         let focusCode = focusCodeTextField.stringValue
         Logger.debug("focus code changed: \(focusCode)")
         ConfigStore.shared.setFocusCode(focusCode)
+    }
+
+    @IBAction func gitOpenFunctionDidChange(_ sender: Any) {
+        let gitFn = gitOpenFunctionTextField.stringValue
+        Logger.debug("git open function changed: \(gitFn)")
+        ConfigStore.shared.setGitOpenFunction(gitFn)
+    }
+
+    @IBAction func fileExtensionsDidChange(_ sender: Any) {
+        let raw = fileExtensionsTextField.stringValue
+        let current = ConfigStore.shared.config.fileExtensions ?? ""
+        guard raw != current else {
+            Logger.debug("file extensions unchanged, skip")
+            return
+        }
+        Logger.debug("file extensions changed: \(raw)")
+        ConfigStore.shared.setFileExtensions(raw)
+
+        let exts = DefaultAppRegistrar.parseExtensions(raw)
+        DefaultAppRegistrar.shared.registerAsDefault(forExtensions: exts)
     }
 
     @objc func resetData(_ sender: Any?) {

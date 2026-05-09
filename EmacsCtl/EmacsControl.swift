@@ -219,6 +219,99 @@ class EmacsControl: NSObject {
         }
     }
 
+    /// Open a local file in Emacs, mirroring the user's `ecp` shell function:
+    /// resolves the enclosing git toplevel, then evaluates
+    /// `(tctony/persp-switch-by-git-dir <dir> :external t :file <abs path>)`.
+    /// Falls back to `emacsclient -n <file>` if not in a git repository, or if
+    /// the daemon is not running, the daemon will be started first.
+    static func openFile(_ path: String, _ succeed: ((Bool) -> Void)? = nil) {
+        let absolutePath = (path as NSString).standardizingPath
+        Logger.info("openFile: \(absolutePath)")
+
+        let openInRunningEmacs: () -> Void = {
+            let gitDir = gitToplevel(forFile: absolutePath)
+            let gitFn = ConfigStore.shared.config.gitOpenFunction?
+                .trimmingCharacters(in: .whitespaces) ?? ""
+
+            let elisp: String
+            if let dir = gitDir, !gitFn.isEmpty {
+                let escapedDir = escapeForElispString(dir)
+                let escapedFile = escapeForElispString(absolutePath)
+                elisp = "(\(gitFn) \"\(escapedDir)\" :external t :file \"\(escapedFile)\")"
+            } else {
+                if gitDir == nil {
+                    Logger.info("file not in a git repo, falling back to plain emacsclient open")
+                } else {
+                    Logger.info("git open function disabled, falling back to plain emacsclient open")
+                }
+                elisp = ""
+            }
+
+            let args: [String]
+            if elisp.isEmpty {
+                args = buildEmacsClientArgs(["-n", absolutePath])
+            } else {
+                args = buildEmacsClientArgs(["-n", "--eval", elisp])
+            }
+
+            runShellCommand(EmacsClient, args) { code, msg in
+                Logger.info("openFile result: \(code) \(msg)")
+                if code == 0 {
+                    focusOnEmacs(succeed)
+                } else {
+                    displayError(#function, code, msg)
+                    succeed?(false)
+                }
+            }
+        }
+
+        if isRunning() {
+            openInRunningEmacs()
+        } else {
+            Logger.info("emacs not running, starting daemon before opening file")
+            startEmacsDaemon { ok in
+                if ok {
+                    openInRunningEmacs()
+                } else {
+                    succeed?(false)
+                }
+            }
+        }
+    }
+
+    /// Resolve git toplevel of `file` by running `git -C <dir> rev-parse --show-toplevel`.
+    /// Returns nil if not in a git repo or git is not available.
+    private static func gitToplevel(forFile file: String) -> String? {
+        let dir = (file as NSString).deletingLastPathComponent
+        guard !dir.isEmpty else { return nil }
+
+        let process = Process()
+        process.launchPath = "/usr/bin/env"
+        process.arguments = ["git", "-C", dir, "rev-parse", "--show-toplevel"]
+        let stdout = Pipe()
+        let stderr = Pipe()
+        process.standardOutput = stdout
+        process.standardError = stderr
+        do {
+            try process.run()
+            process.waitUntilExit()
+            guard process.terminationStatus == 0 else { return nil }
+            let data = stdout.fileHandleForReading.readDataToEndOfFile()
+            let output = String(data: data, encoding: .utf8)?
+                .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            return output.isEmpty ? nil : output
+        } catch {
+            Logger.warning("git rev-parse failed: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
+    private static func escapeForElispString(_ s: String) -> String {
+        return s
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "\"", with: "\\\"")
+    }
+
     // MARK: -
 
     static let EmacsBundleId = "org.gnu.Emacs"

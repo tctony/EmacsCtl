@@ -16,4 +16,8 @@ class UserDefaultsKeys {
     static let launchAtLogin = "launch_at_login"
 
     static let focusCode = "focus_code"
+
+    static let fileExtensions = "file_extensions"
+
+    static let gitOpenFunction = "git_open_function"
 }

@@ -19,3 +19,15 @@
 
 /* Class = "NSTextFieldCell"; placeholderString = "e.g. (tctony/focus-on-main-frame)"; ObjectID = "FCT-xx-cell-001"; */
 "FCT-xx-cell-001.placeholderString" = "例如 (tctony/focus-on-main-frame)";
+
+/* Class = "NSTextFieldCell"; title = "Git Open Function (empty to disable):"; ObjectID = "GFN-lbl-cell-001"; */
+"GFN-lbl-cell-001.title" = "Git 文件打开函数 (留空则禁用):";
+
+/* Class = "NSTextFieldCell"; placeholderString = "e.g. tctony/persp-switch-by-git-dir"; ObjectID = "GFN-xx-cell-001"; */
+"GFN-xx-cell-001.placeholderString" = "例如 tctony/persp-switch-by-git-dir";
+
+/* Class = "NSTextFieldCell"; title = "Default-app File Extensions (comma separated):"; ObjectID = "EXT-lbl-cell-001"; */
+"EXT-lbl-cell-001.title" = "注册为默认打开的文件后缀 (逗号分隔):";
+
+/* Class = "NSTextFieldCell"; placeholderString = "e.g. h,c,cpp,rs,ts,tsx,py"; ObjectID = "EXT-xx-cell-001"; */
+"EXT-xx-cell-001.placeholderString" = "例如 h,c,cpp,rs,ts,tsx,py";

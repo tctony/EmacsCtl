@@ -64,8 +64,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func application(_ application: NSApplication, open urls: [URL]) {
         for url in urls {
-            if (url.scheme == UrlScheme) {
+            if url.scheme == UrlScheme {
                 UrlProcessor.shared.process(url)
+            } else if url.isFileURL {
+                Logger.info("open file via LaunchServices: \(url.path)")
+                EmacsControl.openFile(url.path)
+            } else {
+                Logger.warning("ignored unknown url: \(url.absoluteString)")
             }
         }
     }
