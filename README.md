@@ -2,7 +2,8 @@
 
 ### Features
 - Use menu on mac status bar to control(start, restart, new window...) emacs deamon process just like systemctl does on linux.
-- Activate emacs window with global shortcut.
+- Activate emacs window with global shortcut. The shortcut can also run a custom elisp snippet (e.g. to toggle between Emacs and another app) when Emacs is already frontmost.
+- Register EmacsCtl as the default opener for configurable file extensions and route opens into the running Emacs session via `emacsclient` (with optional elisp function for files inside a git repo).
 - Support `org-protocol` scheme so you don't need to create an applescript app to do that.
 - Support edit captured content when using `org-roam-protocol`.
 
