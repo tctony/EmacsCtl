@@ -9,9 +9,10 @@ import Cocoa
 import Foundation
 import UserNotifications
 
-func displayNotification(_ content: UNNotificationContent) {
+func displayNotification(_ content: UNNotificationContent, identifier: String? = nil) {
     let display: () -> Void = {
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+        let id = identifier ?? UUID().uuidString
+        let request = UNNotificationRequest(identifier: id, content: content, trigger: nil)
         UNUserNotificationCenter.current().add(request)
     }
     UNUserNotificationCenter.current().getNotificationSettings {

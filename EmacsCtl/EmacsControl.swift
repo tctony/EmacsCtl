@@ -170,6 +170,32 @@ class EmacsControl: NSObject {
         }
     }
 
+    /// Evaluate `elisp` in the running Emacs (or start the daemon first),
+    /// then bring Emacs to the foreground.  Used by notification click
+    /// handlers to focus Emacs and run an action.
+    static func evalAndFocus(_ elisp: String, _ succeed: ((Bool) -> Void)? = nil) {
+        let run: () -> Void = {
+            runShellCommand(EmacsClient, buildEmacsClientArgs(["-n", "--eval", elisp])) { code, msg in
+                Logger.info("evalAndFocus result: \(code) \(msg)")
+                if code == 0 {
+                    focusOnEmacs(succeed)
+                } else {
+                    displayError("evalAndFocus", code, msg)
+                    succeed?(false)
+                }
+            }
+        }
+
+        if isRunning() {
+            run()
+        } else {
+            Logger.info("emacs not running, starting daemon before eval")
+            startEmacsDaemon { ok in
+                if ok { run() } else { succeed?(false) }
+            }
+        }
+    }
+
     static func minimizeEmacs(_ succeed: ((Bool) -> Void)? = nil) {
         runShellCommand(EmacsClient, buildEmacsClientArgs(["--eval", "(iconify-or-deiconify-frame)"])) { code, msg in
             Logger.info("minimizeEmacs result: \(code) \(msg)")
