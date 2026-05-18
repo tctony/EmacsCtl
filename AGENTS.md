@@ -7,8 +7,10 @@ into a running Emacs session via `emacsclient`.
 It also acts as a URL handler for `org-protocol://` (registered via
 `CFBundleURLSchemes` in `Info.plist`) and forwards captures to Emacs:
 
-- `org-protocol://...` URLs are handed to `UrlProcessor` and dispatched
-  to `emacsclient`, so you don't need an AppleScript shim.
+- `org-protocol://...` URLs are handed to `OrgUrlProcessor` and dispatched
+ to `emacsclient`, so you don't need an AppleScript shim.
+- `emacsctl://...` URLs are handled by `EmacsCtlUrlProcessor`, currently
+ used to display actionable notifications (`emacsctl://notify?...`).
 - `org-protocol://roam-ref?...` opens a small editable capture window
   (`OrgRoamCaptureWindow`) that lets you tweak the captured content
   before it's forwarded to Emacs.

@@ -10,9 +10,6 @@ import Combine
 import Sparkle
 import UserNotifications
 
-let EmacsCtlUrlScheme = "emacsctl"
-let EmacsCtlUrlHostNotify = "notify"
-
 class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
 
     let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.variableLength)
@@ -70,52 +67,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
     func application(_ application: NSApplication, open urls: [URL]) {
         for url in urls {
-            if url.scheme == UrlScheme {
-                UrlProcessor.shared.process(url)
+            if url.scheme == OrgUrlScheme {
+                OrgUrlProcessor.shared.process(url)
             } else if url.scheme == EmacsCtlUrlScheme {
-                handleEmacsCtlUrl(url)
+                EmacsCtlUrlProcessor.shared.process(url)
             } else if url.isFileURL {
                 Logger.info("open file via LaunchServices: \(url.path)")
                 EmacsControl.openFile(url.path)
             } else {
                 Logger.warning("ignored unknown url: \(url.absoluteString)")
             }
-        }
-    }
-
-    // MARK: - emacsctl:// URL
-
-    private func handleEmacsCtlUrl(_ url: URL) {
-        guard let comps = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-            Logger.warning("invalid emacsctl url: \(url.absoluteString)")
-            return
-        }
-
-        switch url.host {
-        case EmacsCtlUrlHostNotify:
-            let items = comps.queryItems ?? []
-            let title = items.first(where: { $0.name == "title" })?.value ?? "Emacs"
-            let body = items.first(where: { $0.name == "body" })?.value ?? ""
-            let group = items.first(where: { $0.name == "group" })?.value
-            let actionEval = items.first(where: { $0.name == "actionEval" })?.value
-
-            let content = UNMutableNotificationContent()
-            content.title = title
-            content.body = body
-            content.sound = .default
-            if let group = group, !group.isEmpty {
-                content.threadIdentifier = group
-            }
-            if let eval = actionEval, !eval.isEmpty {
-                content.userInfo = ["actionEval": eval]
-            }
-            // Use group as request identifier so notifications in the same
-            // group replace earlier ones (avoids stacking in Notification
-            // Center).  Fall back to a random id when no group provided.
-            let identifier = (group?.isEmpty == false) ? group! : UUID().uuidString
-            displayNotification(content, identifier: identifier)
-        default:
-            Logger.warning("ignored unknown emacsctl url: \(url.absoluteString)")
         }
     }
 

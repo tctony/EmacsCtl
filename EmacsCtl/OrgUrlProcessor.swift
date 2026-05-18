@@ -1,5 +1,5 @@
 //
-//  UrlProcessor.swift
+//  OrgUrlProcessor.swift
 //  EmacsCtl
 //
 //  Created by Tony Tang on 2024/1/1.
@@ -8,13 +8,13 @@
 import Foundation
 import Cocoa
 
-let UrlScheme = "org-protocol"
+let OrgUrlScheme = "org-protocol"
 
-let UrlHostOrgRoamRef = "roam-ref"
+let OrgUrlHostRoamRef = "roam-ref"
 
-class UrlProcessor {
+class OrgUrlProcessor {
 
-    static let shared = UrlProcessor()
+    static let shared = OrgUrlProcessor()
 
     var pendingSet = Set<UrlCaptureBaseWindow>()
 
@@ -25,7 +25,7 @@ class UrlProcessor {
     func process(_ url: URL) {
         var className: String = ""
 
-        if (url.host == UrlHostOrgRoamRef) {
+        if (url.host == OrgUrlHostRoamRef) {
             className = "OrgRoamCaptureWindow"
         }
 
