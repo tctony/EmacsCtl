@@ -103,6 +103,10 @@ class WindowLayoutManager {
 
         let runningApps = NSWorkspace.shared.runningApplications
 
+        // Group saved windows by app (bundle ID or owner name)
+        // so we can match them by order within the same app
+        var usedWindowIndices: [pid_t: Int] = [:]
+
         for savedWindow in savedWindows {
             let matchingApp = runningApps.first { app in
                 if let savedBundleId = savedWindow.bundleIdentifier,
@@ -129,65 +133,59 @@ class WindowLayoutManager {
                 continue
             }
 
-            for window in windows {
-                // Match by window title if available
-                if let savedName = savedWindow.windowName {
-                    var titleRef: CFTypeRef?
-                    AXUIElementCopyAttributeValue(
-                        window, kAXTitleAttribute as CFString, &titleRef)
-                    let title = titleRef as? String
-                    if title != savedName { continue }
-                }
+            // Pick the next unused window for this app
+            let nextIndex = usedWindowIndices[app.processIdentifier] ?? 0
+            guard nextIndex < windows.count else { continue }
+            let window = windows[nextIndex]
+            usedWindowIndices[app.processIdentifier] = nextIndex + 1
 
-                // Set position
-                var position = CGPoint(x: savedWindow.x, y: savedWindow.y)
-                var posRestored = false
-                if let posValue = AXValueCreate(.cgPoint, &position) {
-                    let posResult = AXUIElementSetAttributeValue(
-                        window, kAXPositionAttribute as CFString, posValue)
-                    if posResult == .success {
-                        posRestored = true
-                    } else {
-                        Logger.debug("Set position failed for \(savedWindow.ownerName): \(posResult.rawValue)")
-                    }
+            // Set position
+            var position = CGPoint(x: savedWindow.x, y: savedWindow.y)
+            var posRestored = false
+            if let posValue = AXValueCreate(.cgPoint, &position) {
+                let posResult = AXUIElementSetAttributeValue(
+                    window, kAXPositionAttribute as CFString, posValue)
+                if posResult == .success {
+                    posRestored = true
+                } else {
+                    Logger.debug("Set position failed for \(savedWindow.ownerName): \(posResult.rawValue)")
                 }
-
-                // Set size
-                var size = CGSize(width: savedWindow.width, height: savedWindow.height)
-                var sizeRestored = false
-                if let sizeValue = AXValueCreate(.cgSize, &size) {
-                    let sizeResult = AXUIElementSetAttributeValue(
-                        window, kAXSizeAttribute as CFString, sizeValue)
-                    if sizeResult == .success {
-                        sizeRestored = true
-                    } else {
-                        Logger.debug("Set size failed for \(savedWindow.ownerName): \(sizeResult.rawValue)")
-                    }
-                }
-
-                // If AX failed, try AppleScript fallback
-                if !posRestored || !sizeRestored {
-                    let restored = restoreViaAppleScript(
-                        appName: savedWindow.ownerName,
-                        x: Int(savedWindow.x), y: Int(savedWindow.y),
-                        width: Int(savedWindow.width), height: Int(savedWindow.height))
-                    if restored {
-                        Logger.debug("Restored \(savedWindow.ownerName) via AppleScript")
-                    } else if !sizeRestored {
-                        // Last resort: try zoom button
-                        var zoomButtonRef: CFTypeRef?
-                        let zbResult = AXUIElementCopyAttributeValue(
-                            window, kAXZoomButtonAttribute as CFString, &zoomButtonRef)
-                        if zbResult == .success, let zoomButton = zoomButtonRef {
-                            AXUIElementPerformAction(
-                                zoomButton as! AXUIElement, kAXPressAction as CFString)
-                        }
-                    }
-                }
-
-                restoredCount += 1
-                break // Only restore first matching window per saved entry
             }
+
+            // Set size
+            var size = CGSize(width: savedWindow.width, height: savedWindow.height)
+            var sizeRestored = false
+            if let sizeValue = AXValueCreate(.cgSize, &size) {
+                let sizeResult = AXUIElementSetAttributeValue(
+                    window, kAXSizeAttribute as CFString, sizeValue)
+                if sizeResult == .success {
+                    sizeRestored = true
+                } else {
+                    Logger.debug("Set size failed for \(savedWindow.ownerName): \(sizeResult.rawValue)")
+                }
+            }
+
+            // If AX failed, try AppleScript fallback
+            if !posRestored || !sizeRestored {
+                let restored = restoreViaAppleScript(
+                    appName: savedWindow.ownerName,
+                    x: Int(savedWindow.x), y: Int(savedWindow.y),
+                    width: Int(savedWindow.width), height: Int(savedWindow.height))
+                if restored {
+                    Logger.debug("Restored \(savedWindow.ownerName) via AppleScript")
+                } else if !sizeRestored {
+                    // Last resort: try zoom button
+                    var zoomButtonRef: CFTypeRef?
+                    let zbResult = AXUIElementCopyAttributeValue(
+                        window, kAXZoomButtonAttribute as CFString, &zoomButtonRef)
+                    if zbResult == .success, let zoomButton = zoomButtonRef {
+                        AXUIElementPerformAction(
+                            zoomButton as! AXUIElement, kAXPressAction as CFString)
+                    }
+                }
+            }
+
+            restoredCount += 1
         }
 
         Logger.info("Restored \(restoredCount) of \(savedWindows.count) windows")
