@@ -70,9 +70,10 @@ class SettingWindowController: BaseWindowController {
         resetButton.bezelStyle = .rounded
         resetButton.sizeToFit()
         if let contentView = window?.contentView {
-            resetButton.frame.origin.x = contentView.bounds.size.width - resetButton.frame.size.width
-            resetButton.frame.origin.y = 0
-            resetButton.autoresizingMask = [.minXMargin, .maxYMargin]
+            resetButton.frame.origin.x = 23
+            // Above "Launch At Login" checkbox, top-left corner
+            resetButton.frame.origin.y = contentView.bounds.size.height - resetButton.frame.size.height + 6
+            resetButton.autoresizingMask = [.maxXMargin, .minYMargin]
             contentView.addSubview(resetButton)
         }
         #endif
