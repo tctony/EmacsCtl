@@ -263,7 +263,9 @@ class EmacsControl: NSObject {
             if let dir = gitDir, !gitFn.isEmpty {
                 let escapedDir = escapeForElispString(dir)
                 let escapedFile = escapeForElispString(absolutePath)
-                elisp = "(\(gitFn) \"\(escapedDir)\" :external t :file \"\(escapedFile)\")"
+                elisp = gitFn
+                    .replacingOccurrences(of: "%gitdir", with: escapedDir)
+                    .replacingOccurrences(of: "%file", with: escapedFile)
             } else {
                 if gitDir == nil {
                     Logger.info("file not in a git repo, falling back to plain emacsclient open")
@@ -283,7 +285,16 @@ class EmacsControl: NSObject {
             runShellCommand(EmacsClient, args) { code, msg in
                 Logger.info("openFile result: \(code) \(msg)")
                 if code == 0 {
-                    focusOnEmacs(succeed)
+                    // Bring Emacs to front without triggering toggle logic in focusOnEmacs
+                    let frontMost = isFrontMost()
+                    Logger.info("openFile done, isFrontMost=\(frontMost)")
+                    if !frontMost,
+                       let appURL = NSWorkspace.shared.urlForApplication(
+                        withBundleIdentifier: EmacsBundleId) {
+                        Logger.info("activating Emacs via openApplication")
+                        NSWorkspace.shared.openApplication(at: appURL, configuration: .init())
+                    }
+                    succeed?(true)
                 } else {
                     displayError(#function, code, msg)
                     succeed?(false)

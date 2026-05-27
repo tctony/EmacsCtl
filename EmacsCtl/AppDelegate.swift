@@ -65,6 +65,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         showSettingIfFirstLaunch()
     }
 
+    private var lastOpenedFile: (path: String, time: Date)?
+
     func application(_ application: NSApplication, open urls: [URL]) {
         for url in urls {
             if url.scheme == OrgUrlScheme {
@@ -72,6 +74,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             } else if url.scheme == EmacsCtlUrlScheme {
                 EmacsCtlUrlProcessor.shared.process(url)
             } else if url.isFileURL {
+                // Deduplicate rapid-fire open events for the same file
+                if let last = lastOpenedFile,
+                   last.path == url.path,
+                   Date().timeIntervalSince(last.time) < 0.5 {
+                    Logger.debug("skipping duplicate open for: \(url.path)")
+                    continue
+                }
+                lastOpenedFile = (url.path, Date())
                 Logger.info("open file via LaunchServices: \(url.path)")
                 EmacsControl.openFile(url.path)
             } else {

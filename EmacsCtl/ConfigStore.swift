@@ -32,7 +32,7 @@ class ConfigStore {
 
     static let defaultFocusCode = "(tctony/toggle-between-emacs-and-cmux)"
 
-    static let defaultGitOpenFunction = "tctony/persp-switch-by-git-dir"
+    static let defaultGitOpenFunction = "(tctony/persp-switch-by-git-dir \"%gitdir\" :file \"%file\")"
 
     static let defaultFileExtensions = "h,c,cpp,rs,ts,tsx,js,py"
 
@@ -41,14 +41,21 @@ class ConfigStore {
     private let store = UserDefaults.standard
 
     private init() {
+        var gitOpenFn = store.string(forKey: UserDefaultsKeys.gitOpenFunction)
+            ?? ConfigStore.defaultGitOpenFunction
+        // Migrate old function-name format to template format
+        if !gitOpenFn.isEmpty && !gitOpenFn.contains("%") {
+            gitOpenFn = "(\(gitOpenFn) \"%gitdir\" :file \"%file\")"
+            store.set(gitOpenFn, forKey: UserDefaultsKeys.gitOpenFunction)
+        }
+
         config = Config(emacsPidFile: store.string(forKey: UserDefaultsKeys.pidFile),
                         emacsInstallDir: store.string(forKey: UserDefaultsKeys.installDir),
                         focusCode: store.string(forKey: UserDefaultsKeys.focusCode)
                             ?? ConfigStore.defaultFocusCode,
                         fileExtensions: store.string(forKey: UserDefaultsKeys.fileExtensions)
                             ?? ConfigStore.defaultFileExtensions,
-                        gitOpenFunction: store.string(forKey: UserDefaultsKeys.gitOpenFunction)
-                            ?? ConfigStore.defaultGitOpenFunction)
+                        gitOpenFunction: gitOpenFn)
     }
 
     func setPidFile(_ pidFile: String) {
