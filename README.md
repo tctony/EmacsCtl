@@ -7,6 +7,7 @@
 - Support edit captured content when using `org-roam-protocol`.
 - Register EmacsCtl as the default opener for configurable file extensions and route opens into the running Emacs session via `emacsclient` (with optional elisp function for files inside a git repo).
 - Provide an `emacsctl://notify?title=&body=&group=&actionEval=` URL scheme so Emacs (or any tool) can display native macOS notifications via EmacsCtl; clicking the banner can evaluate a custom elisp snippet and focus Emacs. Notifications sharing the same `group` replace each other in Notification Center instead of stacking.
+- Save and restore window layouts for multi-monitor setups (e.g. after wake from sleep).
 
 ### Install
 
