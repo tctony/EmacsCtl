@@ -52,8 +52,10 @@ Open `EmacsCtl.xcworkspace` in Xcode for normal development.
    since the last version tag (`git log $(git describe --tags --abbrev=0)..HEAD --oneline`) and
    if any of them introduce user-visible features or behaviour changes that
    are not yet reflected in `README.md` (especially the Features section),
-   update it as part of the version bump. Skip this step only when the
-   commits are purely internal (refactors, CI, chores, doc-only tweaks).
+   update it as part of the version bump. Use the format: a short sentence
+   or title as the top-level bullet, with several sub-bullets for details.
+   Skip this step only when the commits are purely internal (refactors, CI,
+   chores, doc-only tweaks).
 4. **Bump the version** using `just bump <level>` (`patch` / `minor` / `major`).
    If the level is unclear from the user's request, ask before running.
    ```bash
