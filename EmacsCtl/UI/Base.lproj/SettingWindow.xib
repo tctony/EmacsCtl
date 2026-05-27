@@ -48,7 +48,7 @@
                         </textFieldCell>
                     </textField>
                     <customView id="46r-1h-CZY" customClass="MASShortcutView">
-                        <rect key="frame" x="203" y="311" width="117" height="20"/>
+                        <rect key="frame" x="197" y="311" width="110" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="string" keyPath="associatedUserDefaultsKey" value="SwitchToEmacs"/>

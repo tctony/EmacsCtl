@@ -22,3 +22,10 @@
 "check_update" = "检查更新";
 "file" = "窗口";
 "close" = "关闭";
+
+"save_layout" = "保存布局";
+"restore_layout" = "恢复布局";
+"layout_saved_title" = "布局已保存";
+"layout_saved_body" = "已记录 %d 个窗口的位置";
+"restore_layout_title" = "恢复布局";
+"restore_layout_none" = "没有已保存的布局或未能恢复任何窗口";

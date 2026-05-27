@@ -185,8 +185,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         }
 
         menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: NSLocalizedString("restore_layout", comment: ""),
+                                action: #selector(AppDelegate.restoreWindowLayout(_:)),
+                                keyEquivalent: ""))
+        menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: NSLocalizedString("setting", comment: ""),
-                                action: #selector(AppDelegate.showSettingWindow(_:)), 
+                                action: #selector(AppDelegate.showSettingWindow(_:)),
                                 keyEquivalent: ""))
 
         menu.addItem(NSMenuItem(title: NSLocalizedString("check_update", comment: ""),
@@ -252,6 +256,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     @objc func startEmacs(_ sender: NSMenuItem) {
         Logger.info("start emacs daemon")
         EmacsControl.startEmacsDaemon()
+    }
+
+    @objc func restoreWindowLayout(_ sender: NSMenuItem) {
+        Logger.info("restore window layout")
+        let count = WindowLayoutManager.shared.restoreLayout()
+        if count == 0 {
+            let content = UNMutableNotificationContent()
+            content.title = NSLocalizedString("restore_layout_title", comment: "")
+            content.body = NSLocalizedString("restore_layout_none", comment: "")
+            content.sound = .default
+            displayNotification(content)
+        }
     }
 
     @objc func quitEmacsCtl(_ sender: NSMenuItem) {

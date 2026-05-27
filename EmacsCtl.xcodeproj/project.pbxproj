@@ -34,6 +34,7 @@
 		EAB3303B2B235712006BC4DD /* EmacsControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB3303A2B235712006BC4DD /* EmacsControl.swift */; };
 		EAB3303D2B23571E006BC4DD /* ConfigStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB3303C2B23571E006BC4DD /* ConfigStore.swift */; };
 		DA0000012B28417F0050DA91 /* DefaultAppRegistrar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0000002B28417F0050DA91 /* DefaultAppRegistrar.swift */; };
+		AA0000012C34000000050A91 /* WindowLayoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000002C34000000050A91 /* WindowLayoutManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -59,6 +60,7 @@
 		DE368BC7432E99E5953AFF41 /* Pods_LaunchHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LaunchHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA1058C32B28417F0050DA91 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		DA0000002B28417F0050DA91 /* DefaultAppRegistrar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAppRegistrar.swift; sourceTree = "<group>"; };
+		AA0000002C34000000050A91 /* WindowLayoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowLayoutManager.swift; sourceTree = "<group>"; };
 		CB0000002B28417F0050DA91 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		EA1058D22B284C9D0050DA91 /* LaunchHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LaunchHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA1058D42B284C9D0050DA91 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 				EAA4ACC02B426AC000E45784 /* EmacsCtlUrlProcessor.swift */,
 				EA1058C32B28417F0050DA91 /* Util.swift */,
 				DA0000002B28417F0050DA91 /* DefaultAppRegistrar.swift */,
+				AA0000002C34000000050A91 /* WindowLayoutManager.swift */,
 				CB0000002B28417F0050DA91 /* Logger.swift */,
 				EA3DC4F72B28963D0015BE5E /* OC */,
 				EA12CF162B255122005033A8 /* Localizable.strings */,
@@ -448,6 +451,7 @@
 				EA3DC4F62B2895F20015BE5E /* ShortcutsController.m in Sources */,
 				EA1058C42B28417F0050DA91 /* Util.swift in Sources */,
 				DA0000012B28417F0050DA91 /* DefaultAppRegistrar.swift in Sources */,
+				AA0000012C34000000050A91 /* WindowLayoutManager.swift in Sources */,
 				CB0000012B28417F0050DA91 /* Logger.swift in Sources */,
 				EAA4ACC02B426DA600E45784 /* UrlCaptureBaseWindow.swift in Sources */,
 				EA12CF3E2B25FE75005033A8 /* AppMenu.swift in Sources */,

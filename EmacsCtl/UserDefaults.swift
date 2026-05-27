@@ -20,4 +20,6 @@ class UserDefaultsKeys {
     static let fileExtensions = "file_extensions"
 
     static let gitOpenFunction = "git_open_function"
+
+    static let savedWindowLayout = "saved_window_layout"
 }

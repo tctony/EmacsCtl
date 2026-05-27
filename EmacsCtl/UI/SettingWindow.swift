@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import UserNotifications
 
 class SettingWindowController: BaseWindowController {
 
@@ -45,14 +46,27 @@ class SettingWindowController: BaseWindowController {
             fileExtensionsTextField.stringValue = exts
         }
 
-        #if DEBUG
-        let button = NSButton(title: "reset", target: self, action: #selector(resetData(_:)))
-        button.sizeToFit()
+        // "Save Layout" button on the first row, rightmost
         if let contentView = window?.contentView {
-            button.frame.origin.x = contentView.bounds.size.width - button.frame.size.width - 4
-            button.frame.origin.y = contentView.bounds.size.height - button.frame.size.height - 4
+            let button = NSButton(title: NSLocalizedString("save_layout", comment: ""),
+                                  target: self, action: #selector(saveWindowLayout(_:)))
+            button.bezelStyle = .rounded
+            button.sizeToFit()
+            button.frame.origin.x = contentView.bounds.size.width - button.frame.size.width - 8
+            button.frame.origin.y = contentView.bounds.size.height - button.frame.size.height - 6
             button.autoresizingMask = [.minXMargin, .minYMargin]
             contentView.addSubview(button)
+        }
+
+        #if DEBUG
+        let resetButton = NSButton(title: "reset", target: self, action: #selector(resetData(_:)))
+        resetButton.bezelStyle = .rounded
+        resetButton.sizeToFit()
+        if let contentView = window?.contentView {
+            resetButton.frame.origin.x = contentView.bounds.size.width - resetButton.frame.size.width
+            resetButton.frame.origin.y = 0
+            resetButton.autoresizingMask = [.minXMargin, .maxYMargin]
+            contentView.addSubview(resetButton)
         }
         #endif
     }
@@ -129,6 +143,15 @@ class SettingWindowController: BaseWindowController {
 
         let exts = DefaultAppRegistrar.parseExtensions(raw)
         DefaultAppRegistrar.shared.registerAsDefault(forExtensions: exts)
+    }
+
+    @objc func saveWindowLayout(_ sender: Any?) {
+        let count = WindowLayoutManager.shared.saveLayout()
+        let content = UNMutableNotificationContent()
+        content.title = NSLocalizedString("layout_saved_title", comment: "")
+        content.body = String(format: NSLocalizedString("layout_saved_body", comment: ""), count)
+        content.sound = .default
+        displayNotification(content)
     }
 
     @objc func resetData(_ sender: Any?) {
