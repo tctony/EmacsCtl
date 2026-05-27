@@ -194,8 +194,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
                                 keyEquivalent: ""))
 
         menu.addItem(NSMenuItem(title: NSLocalizedString("check_update", comment: ""),
-                                target: self.updator!,
-                                action: #selector(SPUStandardUpdaterController.checkForUpdates(_:)),
+                                target: self,
+                                action: #selector(AppDelegate.checkForUpdates(_:)),
                                 keyEquivalent: ""))
 
         menu.addItem(withTitle: NSLocalizedString("quit", comment: ""),
@@ -218,6 +218,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         UserDefaults.standard.synchronize()
     }
 
+    @objc func checkForUpdates(_ sender: NSMenuItem) {
+        NSApp.activate(ignoringOtherApps: true)
+        updator?.checkForUpdates(sender)
+    }
+
     @objc func showSettingWindow(_ sender: NSMenuItem?) {
         Logger.info("show configure window")
 
@@ -229,8 +234,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
         settingWindowCtrl = SettingWindowController(windowNibName: "SettingWindow")
 
-        settingWindowCtrl.showWindow(self)
         NSApp.activate(ignoringOtherApps: true)
+        settingWindowCtrl.showWindow(self)
         self.settingWindowCtrl.window?.makeKeyAndOrderFront(self)
 
         settingWindowCtrl.onClose { [weak self] in

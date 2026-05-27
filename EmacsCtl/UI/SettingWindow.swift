@@ -30,6 +30,13 @@ class SettingWindowController: BaseWindowController {
 
         self.window?.title = "EmacsCtl v\(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!)"
 
+        if let window = self.window, let screen = window.screen ?? NSScreen.main {
+            let screenFrame = screen.visibleFrame
+            let x = screenFrame.midX - window.frame.width / 2
+            let y = screenFrame.midY - window.frame.height / 2 + 100
+            window.setFrameOrigin(NSPoint(x: x, y: y))
+        }
+
         if let filePath = ConfigStore.shared.config.emacsPidFile {
             pidFileTextField.stringValue = filePath
         }
