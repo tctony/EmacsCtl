@@ -42,3 +42,7 @@ bump level:
 
     sed -i '' "s/^{{VERSION_VAR}} = .*/{{VERSION_VAR}} = ${new_version}/" "{{VERSION_FILE}}"
     echo "Bumped $level_upper version: $current → $new_version"
+
+# reset permission
+rp:
+    tccutil reset Accessibility com.tctony.EmacsCtl
