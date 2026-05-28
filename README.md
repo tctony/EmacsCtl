@@ -13,7 +13,9 @@
   - Parameters: `title`, `body`, `group`, `actionEval`.
   - Clicking the banner evaluates `actionEval` in Emacs and focuses the window.
   - Notifications sharing the same `group` replace each other instead of stacking.
-- Save and restore window layouts for multi-monitor setups (e.g. after wake from sleep).
+- Save and restore window layouts for multi-monitor setups.
+  - Optionally auto-restore when pressing the shortcut if windows have drifted
+    (e.g. after wake from sleep).
 
 ### Install
 
