@@ -29,3 +29,6 @@
 "layout_saved_body" = "已记录 %d 个窗口的位置";
 "restore_layout_title" = "恢复布局";
 "restore_layout_none" = "没有已保存的布局或未能恢复任何窗口";
+
+"auto_restore_layout" = "自动恢复布局";
+"auto_restore_info" = "按快捷键切换到 Emacs 时，自动检测窗口是否偏移（如睡眠唤醒后），若偏移则先恢复到保存的位置再聚焦。";

@@ -22,4 +22,6 @@ class UserDefaultsKeys {
     static let gitOpenFunction = "git_open_function"
 
     static let savedWindowLayout = "saved_window_layout"
+
+    static let autoRestoreLayout = "auto_restore_layout"
 }

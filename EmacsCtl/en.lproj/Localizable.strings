@@ -29,3 +29,6 @@
 "layout_saved_body" = "Recorded positions of %d windows";
 "restore_layout_title" = "Restore Layout";
 "restore_layout_none" = "No saved layout or no windows could be restored";
+
+"auto_restore_layout" = "Auto Restore Layout";
+"auto_restore_info" = "When pressing the shortcut to switch to Emacs, automatically check if windows have moved (e.g. after wake from sleep) and restore them to saved positions before focusing.";

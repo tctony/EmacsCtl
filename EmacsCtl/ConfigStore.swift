@@ -23,6 +23,8 @@ struct Config {
     /// `tctony/persp-switch-by-git-dir`. An empty value disables this and
     /// falls back to `emacsclient -n <file>`.
     var gitOpenFunction: String?
+
+    var autoRestoreLayout: Bool = false
 }
 
 
@@ -49,7 +51,8 @@ class ConfigStore {
                         focusCode: store.string(forKey: UserDefaultsKeys.focusCode),
                         fileExtensions: store.string(forKey: UserDefaultsKeys.fileExtensions)
                             ?? ConfigStore.defaultFileExtensions,
-                        gitOpenFunction: gitOpenFn)
+                        gitOpenFunction: gitOpenFn,
+                        autoRestoreLayout: store.bool(forKey: UserDefaultsKeys.autoRestoreLayout))
     }
 
     func setPidFile(_ pidFile: String) {
@@ -85,5 +88,12 @@ class ConfigStore {
         store.synchronize()
 
         config.gitOpenFunction = gitOpenFunction
+    }
+
+    func setAutoRestoreLayout(_ enabled: Bool) {
+        store.set(enabled, forKey: UserDefaultsKeys.autoRestoreLayout)
+        store.synchronize()
+
+        config.autoRestoreLayout = enabled
     }
 }

@@ -220,6 +220,18 @@ class EmacsControl: NSObject {
             return
         }
 
+        // Auto-restore layout if enabled and Emacs position is wrong
+        let autoRestore = ConfigStore.shared.config.autoRestoreLayout
+        Logger.info("switchToEmacs: autoRestoreLayout=\(autoRestore)")
+        if autoRestore {
+            let needs = WindowLayoutManager.shared.needsRestore()
+            Logger.info("switchToEmacs: needsRestore=\(needs)")
+            if needs {
+                Logger.info("Auto-restoring window layout before switching to Emacs")
+                WindowLayoutManager.shared.restoreLayout()
+            }
+        }
+
         let elisp = #"(if (seq-find (lambda (f) (and (frame-parameter f 'window-system) (frame-visible-p f))) (frame-list)) "t" "nil")"#
         runShellCommand(EmacsClient, buildEmacsClientArgs(["--eval", elisp])) { code, stdout, stderr in
             if code == 0 && stdout.contains("t") {

@@ -21,14 +21,14 @@
         <window title="Setting" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" animationBehavior="default" id="QvC-M9-y7g" userLabel="Setting">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="520" width="400" height="342"/>
+            <rect key="contentRect" x="196" y="520" width="400" height="366"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1600" height="875"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="400" height="342"/>
+                <rect key="frame" x="0.0" y="0.0" width="400" height="366"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                 <subviews>
                     <button verticalHuggingPriority="750" id="Ltt-Ml-SUH">
-                        <rect key="frame" x="8" y="312" width="124" height="18"/>
+                        <rect key="frame" x="8" y="336" width="124" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Launch At Login" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Nrn-Rr-DzS">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -39,8 +39,8 @@
                         </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="6nu-iO-qoV">
-                        <rect key="frame" x="140" y="313" width="57" height="16"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <rect key="frame" x="222" y="337" width="57" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" title="Shortcut" id="EqI-f1-EAJ">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -48,14 +48,14 @@
                         </textFieldCell>
                     </textField>
                     <customView id="46r-1h-CZY" customClass="MASShortcutView">
-                        <rect key="frame" x="197" y="311" width="110" height="20"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <rect key="frame" x="280" y="335" width="110" height="20"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="string" keyPath="associatedUserDefaultsKey" value="SwitchToEmacs"/>
                         </userDefinedRuntimeAttributes>
                     </customView>
                     <box boxType="separator" id="SEP-row-001">
-                        <rect key="frame" x="8" y="294" width="384" height="5"/>
+                        <rect key="frame" x="8" y="295" width="384" height="5"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </box>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="80q-EM-rK9">

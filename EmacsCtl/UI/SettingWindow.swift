@@ -53,16 +53,38 @@ class SettingWindowController: BaseWindowController {
             fileExtensionsTextField.stringValue = exts
         }
 
-        // "Save Layout" button on the first row, rightmost
+        // Auto-restore layout row (below "Launch At Login", above separator)
         if let contentView = window?.contentView {
-            let button = NSButton(title: NSLocalizedString("save_layout", comment: ""),
-                                  target: self, action: #selector(saveWindowLayout(_:)))
-            button.bezelStyle = .rounded
-            button.sizeToFit()
-            button.frame.origin.x = contentView.bounds.size.width - button.frame.size.width - 8
-            button.frame.origin.y = contentView.bounds.size.height - button.frame.size.height - 6
-            button.autoresizingMask = [.minXMargin, .minYMargin]
-            contentView.addSubview(button)
+            let rowY: CGFloat = 310
+
+            // Checkbox: auto restore layout
+            let checkbox = NSButton(checkboxWithTitle: NSLocalizedString("auto_restore_layout", comment: ""),
+                                    target: self, action: #selector(autoRestoreLayoutChanged(_:)))
+            checkbox.state = ConfigStore.shared.config.autoRestoreLayout ? .on : .off
+            checkbox.sizeToFit()
+            checkbox.frame.origin = NSPoint(x: 8, y: rowY)
+            checkbox.autoresizingMask = [.maxXMargin, .minYMargin]
+            contentView.addSubview(checkbox)
+
+            // Info icon button
+            let infoButton = NSButton(frame: NSRect(x: checkbox.frame.maxX + 4, y: rowY + 1, width: 14, height: 14))
+            infoButton.image = NSImage(named: NSImage.infoName)
+            infoButton.imageScaling = .scaleProportionallyDown
+            infoButton.isBordered = false
+            infoButton.target = self
+            infoButton.action = #selector(showAutoRestoreInfo(_:))
+            infoButton.autoresizingMask = [.maxXMargin, .minYMargin]
+            contentView.addSubview(infoButton)
+
+            // Save Layout button (same row, rightmost, vertically centered with checkbox)
+            let saveButton = NSButton(title: NSLocalizedString("save_layout", comment: ""),
+                                      target: self, action: #selector(saveWindowLayout(_:)))
+            saveButton.bezelStyle = .rounded
+            saveButton.sizeToFit()
+            saveButton.frame.origin.x = contentView.bounds.size.width - saveButton.frame.size.width - 8
+            saveButton.frame.origin.y = checkbox.frame.midY - saveButton.frame.height / 2 - 2
+            saveButton.autoresizingMask = [.minXMargin, .minYMargin]
+            contentView.addSubview(saveButton)
         }
 
         #if DEBUG
@@ -70,7 +92,7 @@ class SettingWindowController: BaseWindowController {
         resetButton.bezelStyle = .rounded
         resetButton.sizeToFit()
         if let contentView = window?.contentView {
-            resetButton.frame.origin.x = 23
+            resetButton.frame.origin.x = 123
             // Above "Launch At Login" checkbox, top-left corner
             resetButton.frame.origin.y = contentView.bounds.size.height - resetButton.frame.size.height + 6
             resetButton.autoresizingMask = [.maxXMargin, .minYMargin]
@@ -160,6 +182,19 @@ class SettingWindowController: BaseWindowController {
         content.body = String(format: NSLocalizedString("layout_saved_body", comment: ""), count)
         content.sound = .default
         displayNotification(content)
+    }
+
+    @objc func autoRestoreLayoutChanged(_ sender: NSButton) {
+        ConfigStore.shared.setAutoRestoreLayout(sender.state == .on)
+    }
+
+    @objc func showAutoRestoreInfo(_ sender: Any?) {
+        let alert = NSAlert()
+        alert.messageText = NSLocalizedString("auto_restore_layout", comment: "")
+        alert.informativeText = NSLocalizedString("auto_restore_info", comment: "")
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
     }
 
     @objc func resetData(_ sender: Any?) {

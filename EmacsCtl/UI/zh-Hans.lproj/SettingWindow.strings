@@ -21,7 +21,7 @@
 "FCT-xx-cell-001.placeholderString" = "例如 (tctony/focus-on-main-frame)";
 
 /* Class = "NSTextFieldCell"; title = "Custom Elisp to Open File (empty to disable):"; ObjectID = "GFN-lbl-cell-001"; */
-"GFN-lbl-cell-001.title" = "在Emacs中打开是运行的代码 (可选):";
+"GFN-lbl-cell-001.title" = "在Emacs中打开时运行的代码 (可选):";
 
 /* Class = "NSTextFieldCell"; placeholderString = "e.g. (tctony/persp-switch-by-git-dir \"%gitdir\" :file \"%file\")"; ObjectID = "GFN-xx-cell-001"; */
 "GFN-xx-cell-001.placeholderString" = "例如 (tctony/persp-switch-by-git-dir \"%gitdir\" :file \"%file\")";

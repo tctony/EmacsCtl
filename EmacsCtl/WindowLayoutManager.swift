@@ -196,6 +196,63 @@ class WindowLayoutManager {
         return store.data(forKey: UserDefaultsKeys.savedWindowLayout) != nil
     }
 
+    /// Check if Emacs window position differs from saved layout (threshold: 10px).
+    func needsRestore() -> Bool {
+        guard let data = store.data(forKey: UserDefaultsKeys.savedWindowLayout),
+              let savedWindows = try? JSONDecoder().decode(
+                [SavedWindowInfo].self, from: data) else {
+            Logger.debug("needsRestore: no saved layout data")
+            return false
+        }
+
+        guard let savedEmacs = savedWindows.first(where: {
+            $0.bundleIdentifier == "org.gnu.Emacs"
+        }) else {
+            Logger.debug("needsRestore: no Emacs entry in saved layout")
+            return false
+        }
+        Logger.debug("needsRestore: saved Emacs at (\(savedEmacs.x),\(savedEmacs.y))")
+
+        let runningApps = NSWorkspace.shared.runningApplications
+        guard let emacsApp = runningApps.first(where: {
+            $0.bundleIdentifier == "org.gnu.Emacs"
+        }) else {
+            Logger.debug("needsRestore: Emacs not running")
+            return false
+        }
+
+        let appElement = AXUIElementCreateApplication(emacsApp.processIdentifier)
+        var windowsRef: CFTypeRef?
+        let result = AXUIElementCopyAttributeValue(
+            appElement, kAXWindowsAttribute as CFString, &windowsRef)
+        guard result == .success,
+              let windows = windowsRef as? [AXUIElement],
+              let window = windows.first else {
+            Logger.debug("needsRestore: AX windows query failed, result=\(result.rawValue)")
+            return false
+        }
+
+        var posRef: CFTypeRef?
+        AXUIElementCopyAttributeValue(window, kAXPositionAttribute as CFString, &posRef)
+        guard let posRef = posRef else {
+            Logger.debug("needsRestore: could not get position attribute")
+            return false
+        }
+
+        var position = CGPoint.zero
+        AXValueGetValue(posRef as! AXValue, .cgPoint, &position)
+
+        let threshold: Double = 10
+        let dx = abs(position.x - savedEmacs.x)
+        let dy = abs(position.y - savedEmacs.y)
+        Logger.debug("needsRestore: current=(\(position.x),\(position.y)) saved=(\(savedEmacs.x),\(savedEmacs.y)) dx=\(dx) dy=\(dy)")
+
+        if dx > threshold || dy > threshold {
+            return true
+        }
+        return false
+    }
+
     /// Fallback: use AppleScript via System Events to set window position/size
     private func restoreViaAppleScript(appName: String, x: Int, y: Int,
                                        width: Int, height: Int) -> Bool {
