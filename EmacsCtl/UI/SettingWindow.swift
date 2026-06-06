@@ -176,10 +176,10 @@ class SettingWindowController: BaseWindowController {
     }
 
     @objc func saveWindowLayout(_ sender: Any?) {
-        let count = WindowLayoutManager.shared.saveLayout()
+        guard let errorMsg = WindowLayoutManager.shared.saveLayout() else { return }
         let content = UNMutableNotificationContent()
-        content.title = NSLocalizedString("layout_saved_title", comment: "")
-        content.body = String(format: NSLocalizedString("layout_saved_body", comment: ""), count)
+        content.title = NSLocalizedString("layout_save_failed_title", comment: "")
+        content.body = errorMsg
         content.sound = .default
         displayNotification(content)
     }

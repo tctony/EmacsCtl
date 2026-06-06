@@ -24,12 +24,12 @@ class WindowLayoutManager {
 
     private let store = UserDefaults.standard
 
-    func saveLayout() -> Int {
+    func saveLayout() -> String? {
         let options: CGWindowListOption = [.optionOnScreenOnly, .excludeDesktopElements]
         guard let windowList = CGWindowListCopyWindowInfo(options, kCGNullWindowID)
                 as? [[String: Any]] else {
             Logger.error("Failed to get window list")
-            return 0
+            return NSLocalizedString("layout_save_failed_body", comment: "")
         }
 
         var savedWindows: [SavedWindowInfo] = []
@@ -75,13 +75,16 @@ class WindowLayoutManager {
         }
 
         // Save to UserDefaults as JSON
-        if let data = try? JSONEncoder().encode(savedWindows) {
+        do {
+            let data = try JSONEncoder().encode(savedWindows)
             store.set(data, forKey: UserDefaultsKeys.savedWindowLayout)
             store.synchronize()
+            Logger.info("Saved layout: \(savedWindows.count) windows")
+            return nil
+        } catch {
+            Logger.error("Failed to encode window layout: \(error)")
+            return NSLocalizedString("layout_save_failed_body", comment: "")
         }
-
-        Logger.info("Saved layout: \(savedWindows.count) windows")
-        return savedWindows.count
     }
 
     func restoreLayout() -> Int {

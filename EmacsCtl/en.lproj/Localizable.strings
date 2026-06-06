@@ -25,8 +25,8 @@
 
 "save_layout" = "Save Layout";
 "restore_layout" = "Restore Layout";
-"layout_saved_title" = "Layout Saved";
-"layout_saved_body" = "Recorded positions of %d windows";
+"layout_save_failed_title" = "Save Layout Failed";
+"layout_save_failed_body" = "Failed to save window layout";
 "restore_layout_title" = "Restore Layout";
 "restore_layout_none" = "No saved layout or no windows could be restored";
 
