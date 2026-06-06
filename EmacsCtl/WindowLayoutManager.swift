@@ -199,7 +199,7 @@ class WindowLayoutManager {
         return store.data(forKey: UserDefaultsKeys.savedWindowLayout) != nil
     }
 
-    /// Check if Emacs window position differs from saved layout (threshold: 10px).
+    /// Check if Emacs or Cmux window position differs from saved layout (threshold: 10px).
     func needsRestore() -> Bool {
         guard let data = store.data(forKey: UserDefaultsKeys.savedWindowLayout),
               let savedWindows = try? JSONDecoder().decode(
@@ -208,50 +208,50 @@ class WindowLayoutManager {
             return false
         }
 
-        guard let savedEmacs = savedWindows.first(where: {
-            $0.bundleIdentifier == "org.gnu.Emacs"
-        }) else {
-            Logger.debug("needsRestore: no Emacs entry in saved layout")
-            return false
-        }
-        Logger.debug("needsRestore: saved Emacs at (\(savedEmacs.x),\(savedEmacs.y))")
+        let trackedApps = ["org.gnu.Emacs", "com.cmuxterm.app"]
 
-        let runningApps = NSWorkspace.shared.runningApplications
-        guard let emacsApp = runningApps.first(where: {
-            $0.bundleIdentifier == "org.gnu.Emacs"
-        }) else {
-            Logger.debug("needsRestore: Emacs not running")
-            return false
-        }
+        for bundleId in trackedApps {
+            guard let saved = savedWindows.first(where: { $0.bundleIdentifier == bundleId }) else {
+                Logger.debug("needsRestore: no \(bundleId) entry in saved layout")
+                continue
+            }
+            Logger.debug("needsRestore: saved \(bundleId) at (\(saved.x),\(saved.y))")
 
-        let appElement = AXUIElementCreateApplication(emacsApp.processIdentifier)
-        var windowsRef: CFTypeRef?
-        let result = AXUIElementCopyAttributeValue(
-            appElement, kAXWindowsAttribute as CFString, &windowsRef)
-        guard result == .success,
-              let windows = windowsRef as? [AXUIElement],
-              let window = windows.first else {
-            Logger.debug("needsRestore: AX windows query failed, result=\(result.rawValue)")
-            return false
-        }
+            let runningApps = NSWorkspace.shared.runningApplications
+            guard let app = runningApps.first(where: { $0.bundleIdentifier == bundleId }) else {
+                Logger.debug("needsRestore: \(bundleId) not running")
+                continue
+            }
 
-        var posRef: CFTypeRef?
-        AXUIElementCopyAttributeValue(window, kAXPositionAttribute as CFString, &posRef)
-        guard let posRef = posRef else {
-            Logger.debug("needsRestore: could not get position attribute")
-            return false
-        }
+            let appElement = AXUIElementCreateApplication(app.processIdentifier)
+            var windowsRef: CFTypeRef?
+            let result = AXUIElementCopyAttributeValue(
+                appElement, kAXWindowsAttribute as CFString, &windowsRef)
+            guard result == .success,
+                  let windows = windowsRef as? [AXUIElement],
+                  let window = windows.first else {
+                Logger.debug("needsRestore: AX windows query failed for \(bundleId), result=\(result.rawValue)")
+                continue
+            }
 
-        var position = CGPoint.zero
-        AXValueGetValue(posRef as! AXValue, .cgPoint, &position)
+            var posRef: CFTypeRef?
+            AXUIElementCopyAttributeValue(window, kAXPositionAttribute as CFString, &posRef)
+            guard let posRef = posRef else {
+                Logger.debug("needsRestore: could not get position for \(bundleId)")
+                continue
+            }
 
-        let threshold: Double = 10
-        let dx = abs(position.x - savedEmacs.x)
-        let dy = abs(position.y - savedEmacs.y)
-        Logger.debug("needsRestore: current=(\(position.x),\(position.y)) saved=(\(savedEmacs.x),\(savedEmacs.y)) dx=\(dx) dy=\(dy)")
+            var position = CGPoint.zero
+            AXValueGetValue(posRef as! AXValue, .cgPoint, &position)
 
-        if dx > threshold || dy > threshold {
-            return true
+            let threshold: Double = 10
+            let dx = abs(position.x - saved.x)
+            let dy = abs(position.y - saved.y)
+            Logger.debug("needsRestore: \(bundleId) current=(\(position.x),\(position.y)) saved=(\(saved.x),\(saved.y)) dx=\(dx) dy=\(dy)")
+
+            if dx > threshold || dy > threshold {
+                return true
+            }
         }
         return false
     }
