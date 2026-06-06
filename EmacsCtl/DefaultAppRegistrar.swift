@@ -73,10 +73,11 @@ class DefaultAppRegistrar {
 
             DispatchQueue.main.async {
                 if failures.isEmpty {
-                    self.displayNote(
-                        title: "Default app updated",
-                        body: "Registered EmacsCtl for: \(exts.joined(separator: ", "))"
-                    )
+                    // do not show notification on all succeed
+                    // self.displayNote(
+                    //     title: "Default app updated",
+                    //     body: "Registered EmacsCtl for: \(exts.joined(separator: ", "))"
+                    // )
                 } else {
                     self.displayNote(
                         title: "Default app partially updated",
