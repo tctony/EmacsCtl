@@ -208,7 +208,7 @@ class WindowLayoutManager {
             return false
         }
 
-        let trackedApps = ["org.gnu.Emacs", "com.cmuxterm.app"]
+        let trackedApps = ["org.gnu.Emacs", "com.tctony.cmux"]
 
         for bundleId in trackedApps {
             guard let saved = savedWindows.first(where: { $0.bundleIdentifier == bundleId }) else {
