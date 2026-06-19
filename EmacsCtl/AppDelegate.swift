@@ -103,13 +103,42 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
+        defer { completionHandler() }
+
         let userInfo = response.notification.request.content.userInfo
-        if let eval = userInfo["actionEval"] as? String, !eval.isEmpty {
-            EmacsControl.evalAndFocus(eval)
+        let actionType: String
+        if let value = userInfo["actionType"] {
+            guard let value = value as? String else {
+                Logger.warning("ignored notification with non-string actionType")
+                return
+            }
+            actionType = value
         } else {
-            EmacsControl.focusOnEmacs()
+            actionType = "eval"
         }
-        completionHandler()
+
+        switch actionType {
+        case "eval":
+            if let eval = userInfo["actionEval"] as? String, !eval.isEmpty {
+                EmacsControl.evalAndFocus(eval)
+            } else {
+                EmacsControl.focusOnEmacs()
+            }
+        case "noop":
+            break
+        case "deeplink":
+            if let deeplink = userInfo["actionDeeplink"] as? String,
+               !deeplink.isEmpty,
+               let url = URL(string: deeplink),
+               let scheme = url.scheme,
+               !scheme.isEmpty {
+                NSWorkspace.shared.open(url)
+            } else {
+                Logger.warning("ignored notification with invalid or missing actionDeeplink")
+            }
+        default:
+            Logger.warning("ignored notification with unknown actionType: \(actionType)")
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

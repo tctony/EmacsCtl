@@ -43,6 +43,24 @@ xcodebuild -workspace EmacsCtl.xcworkspace -scheme EmacsCtl \
 
 Open `EmacsCtl.xcworkspace` in Xcode for normal development.
 
+## Deeplink testing
+
+The Debug and release builds share the same bundle ID, so opening an
+`emacsctl://` URL normally may route it to `/Applications/EmacsCtl.app`.
+Target the freshly built Debug app explicitly:
+
+```bash
+DEV_APP="$(find "$HOME/Library/Developer/Xcode/DerivedData" \
+  -path '*/Build/Products/Debug/EmacsCtl.app' -type d -print0 |
+  xargs -0 ls -td | head -n 1)"
+
+open -g -a "$DEV_APP" \
+  'emacsctl://notify?title=Test&body=Noop&actionType=noop'
+```
+
+Use `-a` to bypass the default URL-scheme handler and reuse the running
+Debug instance.
+
 ## Release procedure
 
 1. **Make sure git is clean.** `git status` must show no uncommitted changes.

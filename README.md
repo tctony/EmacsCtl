@@ -10,8 +10,9 @@
   - Route opens into the running Emacs session via `emacsclient`.
   - Optionally running elisp function for files inside a git repo.
 - Native macOS notifications via `emacsctl://notify` URL scheme.
-  - Parameters: `title`, `body`, `group`, `actionEval`.
-  - Clicking the banner evaluates `actionEval` in Emacs and focuses the window.
+  - Parameters: `title`, `body`, `group`, `actionType`, `actionEval`, `actionDeeplink`.
+  - `actionType` defaults to `eval`: clicking evaluates `actionEval`, or focuses Emacs when it is omitted.
+  - `noop` does nothing when clicked; `deeplink` opens `actionDeeplink` without evaluating or focusing Emacs.
   - Notifications sharing the same `group` replace each other instead of stacking.
 - Save and restore window layouts for multi-monitor setups.
   - Optionally auto-restore when pressing the shortcut if windows have drifted
