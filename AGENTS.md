@@ -61,6 +61,32 @@ open -g -a "$DEV_APP" \
 Use `-a` to bypass the default URL-scheme handler and reuse the running
 Debug instance.
 
+## Logs
+
+EmacsCtl writes its log to `~/.cache/emacsctl.log`. The implementation
+lives in `EmacsCtl/Logger.swift`: the path is fixed at
+`homeDirectoryForCurrentUser/.cache/emacsctl.log` and the `.cache`
+directory is created automatically if missing. Use `Logger.logFilePath`
+in code to obtain the path.
+
+- Each line is formatted as
+  `[timestamp] [level] [filename:line] function - message`, where level
+  is one of `DEBUG` / `INFO` / `WARN` / `ERROR`.
+- Debug builds also `print` to the Xcode console (see the `#if DEBUG`
+  branch in `Logger.swift`).
+
+Tail the log live:
+
+```bash
+tail -f ~/.cache/emacsctl.log
+```
+
+Filter for window-restore activity:
+
+```bash
+grep -E "needsRestore|Restored" ~/.cache/emacsctl.log | tail
+```
+
 ## Release procedure
 
 1. **Make sure git is clean.** `git status` must show no uncommitted changes.
