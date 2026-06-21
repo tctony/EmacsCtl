@@ -17,6 +17,8 @@
 - Save and restore window layouts for multi-monitor setups.
   - Optionally auto-restore when pressing the shortcut if windows have drifted
     (e.g. after wake from sleep).
+- Edit the JSON config file directly in Emacs from the status bar menu.
+  - External edits are detected and applied live, without restarting the app.
 
 ### Install
 
