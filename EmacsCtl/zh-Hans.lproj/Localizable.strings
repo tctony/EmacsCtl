@@ -7,7 +7,11 @@
 */
 
 "setting" = "设置";
+"edit_config" = "编辑配置";
 "quit" = "退出";
+
+"config_invalid_title" = "配置无效";
+"config_invalid_body" = "编辑后的配置文件不是合法的 JSON，已保留之前的设置。";
 
 "not_running" = "未运行";
 "start" = "运行";

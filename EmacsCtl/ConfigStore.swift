@@ -8,6 +8,7 @@
 import Combine
 import Dispatch
 import Foundation
+import UserNotifications
 
 struct Config {
     var emacsPidFile: String?
@@ -61,16 +62,47 @@ private final class ConfigFile {
 
     private(set) var config: AppConfig
 
+    /// The exact bytes last written to (or read from) disk. Used to tell our own
+    /// writes apart from external edits: a file-change event whose on-disk bytes
+    /// equal `lastData` is one we caused and can be ignored.
+    private(set) var lastData: Data?
+
     private init() {
         if let data = try? Data(contentsOf: ConfigFile.fileURL),
            let cfg = try? JSONDecoder().decode(AppConfig.self, from: data) {
             config = cfg
+            lastData = data
             Logger.info("Loaded config from \(ConfigFile.fileURL.path)")
         } else {
             config = ConfigFile.migrateFromUserDefaults()
             persist()
             Logger.info("Created config file at \(ConfigFile.fileURL.path)")
         }
+    }
+
+    /// Outcome of re-reading the config file after a file-system event.
+    enum ReloadResult {
+        case unchanged   // bytes equal our last write — our own change, ignore
+        case changed     // external edit, decoded and applied to `config`
+        case invalidJSON // external edit could not be decoded; `config` untouched
+        case missing     // file could not be read; `config` untouched
+    }
+
+    /// Re-read the config file from disk. On a valid external change, updates
+    /// `config` and `lastData` and returns `.changed`.
+    func reloadFromDisk() -> ReloadResult {
+        guard let data = try? Data(contentsOf: ConfigFile.fileURL) else {
+            return .missing
+        }
+        if data == lastData {
+            return .unchanged
+        }
+        guard let cfg = try? JSONDecoder().decode(AppConfig.self, from: data) else {
+            return .invalidJSON
+        }
+        config = cfg
+        lastData = data
+        return .changed
     }
 
     /// Mutate the config and write it back to disk.
@@ -92,9 +124,10 @@ private final class ConfigFile {
             try FileManager.default.createDirectory(
                 at: ConfigFile.directoryURL, withIntermediateDirectories: true)
             let encoder = JSONEncoder()
-            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
             let data = try encoder.encode(config)
             try data.write(to: ConfigFile.fileURL, options: .atomic)
+            lastData = data
         } catch {
             Logger.error("Failed to write config file: \(error)")
         }
@@ -140,21 +173,35 @@ class ConfigStore {
 
     private let store = ConfigFile.shared
 
+    /// Live watcher on the config *directory* (not the file): its inode is stable
+    /// across atomic file replacement, so a single source needs no re-arming.
+    private var configDirSource: DispatchSourceFileSystemObject?
+
+    /// On-disk path of the config file, for opening it in an editor.
+    var configFileURL: URL { ConfigFile.fileURL }
+
     private init() {
-        var gitOpenFn = store.config.gitOpenFunction ?? ""
-        // Migrate old function-name format to template format
+        // Migrate old function-name format to template format.
+        let gitOpenFn = store.config.gitOpenFunction ?? ""
         if !gitOpenFn.isEmpty && !gitOpenFn.contains("%") {
-            gitOpenFn = "(\(gitOpenFn) \"%gitdir\" :file \"%file\")"
-            store.update { $0.gitOpenFunction = gitOpenFn }
+            store.update {
+                $0.gitOpenFunction = "(\(gitOpenFn) \"%gitdir\" :file \"%file\")"
+            }
         }
 
-        config = Config(emacsPidFile: store.config.pidFile,
-                        emacsInstallDir: store.config.installDir,
-                        focusCode: store.config.focusCode,
-                        fileExtensions: store.config.fileExtensions
-                            ?? ConfigStore.defaultFileExtensions,
-                        gitOpenFunction: gitOpenFn,
-                        autoRestoreLayout: store.config.autoRestoreLayout ?? false)
+        config = ConfigStore.deriveConfig(from: store.config)
+
+        startWatchingConfigDir()
+    }
+
+    /// Map the on-disk `AppConfig` to the observable `Config`, applying defaults.
+    private static func deriveConfig(from c: AppConfig) -> Config {
+        Config(emacsPidFile: c.pidFile,
+               emacsInstallDir: c.installDir,
+               focusCode: c.focusCode,
+               fileExtensions: c.fileExtensions ?? ConfigStore.defaultFileExtensions,
+               gitOpenFunction: c.gitOpenFunction ?? "",
+               autoRestoreLayout: c.autoRestoreLayout ?? false)
     }
 
     func setPidFile(_ pidFile: String) {
@@ -218,5 +265,60 @@ class ConfigStore {
     func reset() {
         store.reset()
         config = Config()
+    }
+
+    // MARK: - Watching for external edits
+
+    /// Watch the config directory and live-apply edits made outside the app
+    /// (e.g. saving the JSON from Emacs). Watching the directory rather than the
+    /// file keeps the same watcher valid across atomic replacements.
+    private func startWatchingConfigDir() {
+        try? FileManager.default.createDirectory(
+            at: ConfigFile.directoryURL, withIntermediateDirectories: true)
+
+        let fd = open(ConfigFile.directoryURL.path, O_EVTONLY)
+        guard fd >= 0 else {
+            Logger.error("failed to open config dir for watching")
+            return
+        }
+
+        let source = DispatchSource.makeFileSystemObjectSource(
+            fileDescriptor: fd, eventMask: .write, queue: .main)
+        source.setEventHandler { [weak self] in
+            self?.reloadIfChanged()
+        }
+        source.setCancelHandler { close(fd) }
+        source.resume()
+        configDirSource = source
+        Logger.info("watching config dir for external changes")
+    }
+
+    /// Re-read the config file after a directory event and apply any external
+    /// change. Our own writes are recognised by content comparison and ignored,
+    /// which also filters unrelated events in the directory.
+    private func reloadIfChanged() {
+        let oldExtensions = store.config.fileExtensions
+
+        switch store.reloadFromDisk() {
+        case .unchanged, .missing:
+            return
+        case .invalidJSON:
+            Logger.warning("external config edit is invalid JSON, keeping current config")
+            let content = UNMutableNotificationContent()
+            content.title = NSLocalizedString("config_invalid_title", comment: "")
+            content.body = NSLocalizedString("config_invalid_body", comment: "")
+            content.sound = .default
+            displayNotification(content)
+        case .changed:
+            Logger.info("applying external config change")
+            config = ConfigStore.deriveConfig(from: store.config)
+
+            // Mirror the Settings window: re-register default-app handlers when
+            // the watched extensions actually changed.
+            if store.config.fileExtensions != oldExtensions {
+                let exts = DefaultAppRegistrar.parseExtensions(config.fileExtensions ?? "")
+                DefaultAppRegistrar.shared.registerAsDefault(forExtensions: exts)
+            }
+        }
     }
 }

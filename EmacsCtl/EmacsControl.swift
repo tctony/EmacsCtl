@@ -328,6 +328,36 @@ class EmacsControl: NSObject {
         }
     }
 
+    /// Open EmacsCtl's config file in Emacs with a plain `emacsclient -n <path>`,
+    /// starting the daemon first if needed. Deliberately bypasses `openFile`'s
+    /// git-toplevel / persp logic so editing the config is predictable even when
+    /// `~/.config` is itself a git repo.
+    static func openConfigFile(_ succeed: ((Bool) -> Void)? = nil) {
+        let path = ConfigStore.shared.configFileURL.path
+        Logger.info("openConfigFile: \(path)")
+
+        let run: () -> Void = {
+            runShellCommand(EmacsClient, buildEmacsClientArgs(["-n", path])) { code, msg in
+                Logger.info("openConfigFile result: \(code) \(msg)")
+                if code == 0 {
+                    focusOnEmacs(succeed)
+                } else {
+                    displayError("openConfigFile", code, msg)
+                    succeed?(false)
+                }
+            }
+        }
+
+        if isRunning() {
+            run()
+        } else {
+            Logger.info("emacs not running, starting daemon before opening config")
+            startEmacsDaemon { ok in
+                if ok { run() } else { succeed?(false) }
+            }
+        }
+    }
+
     /// Resolve git toplevel of `file` by running `git -C <dir> rev-parse --show-toplevel`.
     /// Returns nil if not in a git repo or git is not available.
     private static func gitToplevel(forFile file: String) -> String? {

@@ -232,6 +232,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
                                 action: #selector(AppDelegate.showSettingWindow(_:)),
                                 keyEquivalent: ""))
 
+        menu.addItem(NSMenuItem(title: NSLocalizedString("edit_config", comment: ""),
+                                action: #selector(AppDelegate.editConfigFile(_:)),
+                                keyEquivalent: ""))
+
         menu.addItem(NSMenuItem(title: NSLocalizedString("check_update", comment: ""),
                                 target: self,
                                 action: #selector(AppDelegate.checkForUpdates(_:)),
@@ -278,6 +282,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         settingWindowCtrl.onClose { [weak self] in
             self?.settingWindowCtrl = nil
         }
+    }
+
+    @objc func editConfigFile(_ sender: NSMenuItem) {
+        Logger.info("edit config file in emacs")
+        EmacsControl.openConfigFile()
     }
 
     @objc func createEmacsWindow(_ sender: NSMenuItem) {
