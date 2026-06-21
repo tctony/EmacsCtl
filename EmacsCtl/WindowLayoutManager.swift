@@ -22,8 +22,6 @@ class WindowLayoutManager {
 
     static let shared = WindowLayoutManager()
 
-    private let store = UserDefaults.standard
-
     func saveLayout() -> String? {
         let options: CGWindowListOption = [.optionOnScreenOnly, .excludeDesktopElements]
         guard let windowList = CGWindowListCopyWindowInfo(options, kCGNullWindowID)
@@ -74,23 +72,13 @@ class WindowLayoutManager {
             Logger.debug("  [\(ownerName)] bundle=\(bundleId ?? "nil") title=\(windowName ?? "nil") frame=(\(x),\(y),\(width),\(height))")
         }
 
-        // Save to UserDefaults as JSON
-        do {
-            let data = try JSONEncoder().encode(savedWindows)
-            store.set(data, forKey: UserDefaultsKeys.savedWindowLayout)
-            store.synchronize()
-            Logger.info("Saved layout: \(savedWindows.count) windows")
-            return nil
-        } catch {
-            Logger.error("Failed to encode window layout: \(error)")
-            return NSLocalizedString("layout_save_failed_body", comment: "")
-        }
+        ConfigStore.shared.savedWindowLayout = savedWindows
+        Logger.info("Saved layout: \(savedWindows.count) windows")
+        return nil
     }
 
     func restoreLayout() -> Int {
-        guard let data = store.data(forKey: UserDefaultsKeys.savedWindowLayout),
-              let savedWindows = try? JSONDecoder().decode(
-                [SavedWindowInfo].self, from: data) else {
+        guard let savedWindows = ConfigStore.shared.savedWindowLayout else {
             Logger.info("No saved layout found")
             return 0
         }
@@ -142,31 +130,22 @@ class WindowLayoutManager {
             let window = windows[nextIndex]
             usedWindowIndices[app.processIdentifier] = nextIndex + 1
 
-            // Set position
-            var position = CGPoint(x: savedWindow.x, y: savedWindow.y)
-            var posRestored = false
-            if let posValue = AXValueCreate(.cgPoint, &position) {
-                let posResult = AXUIElementSetAttributeValue(
-                    window, kAXPositionAttribute as CFString, posValue)
-                if posResult == .success {
-                    posRestored = true
-                } else {
-                    Logger.debug("Set position failed for \(savedWindow.ownerName): \(posResult.rawValue)")
-                }
-            }
+            let targetPos = CGPoint(x: savedWindow.x, y: savedWindow.y)
+            let targetSize = CGSize(width: savedWindow.width, height: savedWindow.height)
 
-            // Set size
-            var size = CGSize(width: savedWindow.width, height: savedWindow.height)
-            var sizeRestored = false
-            if let sizeValue = AXValueCreate(.cgSize, &size) {
-                let sizeResult = AXUIElementSetAttributeValue(
-                    window, kAXSizeAttribute as CFString, sizeValue)
-                if sizeResult == .success {
-                    sizeRestored = true
-                } else {
-                    Logger.debug("Set size failed for \(savedWindow.ownerName): \(sizeResult.rawValue)")
-                }
-            }
+            let p1 = axSetPos(window, targetPos)
+            let s1 = axSetSize(window, targetSize)
+            let posRestored = (p1 == .success)
+            let sizeRestored = (s1 == .success)
+
+            // Keep re-asserting the frame on later runloops until the app
+            // actually reports it. Some apps (cmux) clamp a requested size to
+            // fit on screen from their *current* position and apply the
+            // position move asynchronously, so a single size set lands clamped
+            // against the old offset. Retrying lets the size settle once the
+            // move has completed, without guessing a fixed delay.
+            enforceFrame(window, pos: targetPos, size: targetSize,
+                         name: savedWindow.ownerName, attempt: 0)
 
             // If AX failed, try AppleScript fallback
             if !posRestored || !sizeRestored {
@@ -196,14 +175,12 @@ class WindowLayoutManager {
     }
 
     func hasSavedLayout() -> Bool {
-        return store.data(forKey: UserDefaultsKeys.savedWindowLayout) != nil
+        return ConfigStore.shared.savedWindowLayout != nil
     }
 
     /// Check if Emacs or Cmux window position differs from saved layout (threshold: 10px).
     func needsRestore() -> Bool {
-        guard let data = store.data(forKey: UserDefaultsKeys.savedWindowLayout),
-              let savedWindows = try? JSONDecoder().decode(
-                [SavedWindowInfo].self, from: data) else {
+        guard let savedWindows = ConfigStore.shared.savedWindowLayout else {
             Logger.debug("needsRestore: no saved layout data")
             return false
         }
@@ -254,6 +231,54 @@ class WindowLayoutManager {
             }
         }
         return false
+    }
+
+    private func axSetPos(_ window: AXUIElement, _ p: CGPoint) -> AXError {
+        var p = p
+        guard let v = AXValueCreate(.cgPoint, &p) else { return .failure }
+        return AXUIElementSetAttributeValue(window, kAXPositionAttribute as CFString, v)
+    }
+
+    private func axSetSize(_ window: AXUIElement, _ s: CGSize) -> AXError {
+        var s = s
+        guard let v = AXValueCreate(.cgSize, &s) else { return .failure }
+        return AXUIElementSetAttributeValue(window, kAXSizeAttribute as CFString, v)
+    }
+
+    private func axFrame(_ window: AXUIElement) -> (CGPoint, CGSize) {
+        var posRef: CFTypeRef?
+        var sizeRef: CFTypeRef?
+        AXUIElementCopyAttributeValue(window, kAXPositionAttribute as CFString, &posRef)
+        AXUIElementCopyAttributeValue(window, kAXSizeAttribute as CFString, &sizeRef)
+        var p = CGPoint.zero
+        var s = CGSize.zero
+        if let r = posRef { AXValueGetValue(r as! AXValue, .cgPoint, &p) }
+        if let r = sizeRef { AXValueGetValue(r as! AXValue, .cgSize, &s) }
+        return (p, s)
+    }
+
+    /// Re-assert a window's frame until the app actually reports it (or we run
+    /// out of attempts). Handles apps that clamp the size against a stale
+    /// position because they apply moves asynchronously.
+    private func enforceFrame(_ window: AXUIElement, pos: CGPoint, size: CGSize,
+                              name: String, attempt: Int) {
+        _ = axSetPos(window, pos)
+        _ = axSetSize(window, size)
+
+        let (ap, asz) = axFrame(window)
+        let tolerance: CGFloat = 8
+        let ok = abs(asz.width - size.width) <= tolerance
+            && abs(asz.height - size.height) <= tolerance
+            && abs(ap.x - pos.x) <= tolerance
+            && abs(ap.y - pos.y) <= tolerance
+        Logger.debug("Restore \(name) attempt \(attempt): target=(\(pos.x),\(pos.y),\(size.width),\(size.height)) actual=(\(ap.x),\(ap.y),\(asz.width),\(asz.height)) ok=\(ok)")
+
+        let maxAttempts = 5
+        guard !ok, attempt + 1 < maxAttempts else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+            self?.enforceFrame(window, pos: pos, size: size,
+                               name: name, attempt: attempt + 1)
+        }
     }
 
     /// Fallback: use AppleScript via System Events to set window position/size

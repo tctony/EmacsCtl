@@ -246,15 +246,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     }
 
     func showSettingIfFirstLaunch() {
-        let key = UserDefaultsKeys.didShowSettingOnFirstLaunch
-        if UserDefaults.standard.bool(forKey: key) {
+        if ConfigStore.shared.didShowSettingOnFirstLaunch {
             return
         }
 
         showSettingWindow(nil)
 
-        UserDefaults.standard.set(true, forKey: key)
-        UserDefaults.standard.synchronize()
+        ConfigStore.shared.didShowSettingOnFirstLaunch = true
     }
 
     @objc func checkForUpdates(_ sender: NSMenuItem) {

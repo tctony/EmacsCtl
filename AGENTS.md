@@ -43,15 +43,44 @@ xcodebuild -workspace EmacsCtl.xcworkspace -scheme EmacsCtl \
 
 Open `EmacsCtl.xcworkspace` in Xcode for normal development.
 
-## Deeplink testing
+### Debug vs release identity
 
-The Debug and release builds share the same bundle ID, so opening an
-`emacsctl://` URL normally may route it to `/Applications/EmacsCtl.app`.
-Target the freshly built Debug app explicitly:
+The Debug build is distinguished from release on three axes:
+
+- **Bundle ID** `com.tctony.EmacsCtl.debug` (release: `com.tctony.EmacsCtl`)
+- **Product name** `EmacsCtl Debug` — so the `.app`, the process, and the
+  name shown in System Settings → Accessibility / Login Items read
+  `EmacsCtl Debug`. The Swift module name is pinned back to `EmacsCtl`
+  (`PRODUCT_MODULE_NAME`) so the generated `EmacsCtl-Swift.h` still
+  matches the `#import` in the Obj-C sources.
+- **Signing** Apple Development cert (team `NSWMLDGCEZ`) so Accessibility
+  permission survives rebuilds (release stays ad-hoc).
+
+Because the IDs and names differ, the Debug and release apps can run at
+the same time and would both grab the global hotkey and run
+window-restore. So after building the Debug app, **kill any running
+instance before launching it**:
 
 ```bash
 DEV_APP="$(find "$HOME/Library/Developer/Xcode/DerivedData" \
-  -path '*/Build/Products/Debug/EmacsCtl.app' -type d -print0 |
+  -path '*/Build/Products/Debug/EmacsCtl Debug.app' -type d -print0 |
+  xargs -0 ls -td | head -n 1)"
+
+# Process names differ now, so each build can be targeted on its own:
+pkill -x EmacsCtl              # release
+pkill -x "EmacsCtl Debug"     # a previous Debug instance
+open "$DEV_APP"
+```
+
+## Deeplink testing
+
+A plain `open emacsctl://...` routes to whichever app LaunchServices has
+registered as the default scheme handler (often the release app in
+`/Applications`). Target the freshly built Debug app explicitly:
+
+```bash
+DEV_APP="$(find "$HOME/Library/Developer/Xcode/DerivedData" \
+  -path '*/Build/Products/Debug/EmacsCtl Debug.app' -type d -print0 |
   xargs -0 ls -td | head -n 1)"
 
 open -g -a "$DEV_APP" \

@@ -18,12 +18,11 @@ class LaunchAtLogin: NSObject {
     }
 
     override init() {
-        isEnabled = UserDefaults.standard.bool(forKey: UserDefaultsKeys.launchAtLogin)
+        isEnabled = ConfigStore.shared.launchAtLogin
     }
 
     private func onChange() {
-        UserDefaults.standard.set(isEnabled, forKey: UserDefaultsKeys.launchAtLogin)
-        UserDefaults.standard.synchronize()
+        ConfigStore.shared.launchAtLogin = isEnabled
 
         let bundleid = "\(Bundle.main.bundleIdentifier!).LaunchHelper"
         SMLoginItemSetEnabled(bundleid as CFString, isEnabled)
