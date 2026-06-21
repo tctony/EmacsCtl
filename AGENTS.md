@@ -90,6 +90,26 @@ open -g -a "$DEV_APP" \
 Use `-a` to bypass the default URL-scheme handler and reuse the running
 Debug instance.
 
+## Config
+
+All persisted settings live in a single JSON file at
+`~/.config/emacsctl/config.json`. The path is independent of the bundle
+ID, so the Debug and release builds **share the same config**.
+
+- `EmacsCtl/ConfigStore.swift` is the single entry point. `ConfigStore`
+  exposes the settings; `ConfigFile` (file-private in the same file) is
+  the JSON-backed store and is the on-disk source of truth.
+- "Reset data" clears all settings by writing an *empty* config file.
+- Stored keys (`AppConfig`): `pidFile`, `installDir`, `focusCode`,
+  `fileExtensions`, `gitOpenFunction`, `autoRestoreLayout`,
+  `launchAtLogin`, `didShowSettingOnFirstLaunch`, `savedWindowLayout`.
+
+Read the current config directly when you need it:
+
+```bash
+cat ~/.config/emacsctl/config.json
+```
+
 ## Logs
 
 EmacsCtl writes its log to `~/.cache/emacsctl.log`. The implementation
