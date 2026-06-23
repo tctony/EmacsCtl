@@ -294,18 +294,23 @@ class EmacsControl: NSObject {
                 args = buildEmacsClientArgs(["-n", "--eval", elisp])
             }
 
+            // Bring Emacs to front *before* the eval, so that even if the git
+            // open function blocks (e.g. it pops an interactive prompt), Emacs
+            // is already visible and the user can respond instead of the flow
+            // getting stuck behind a not-yet-foregrounded window.
+            // Avoid triggering toggle logic in focusOnEmacs.
+            let frontMost = isFrontMost()
+            Logger.info("openFile: bring Emacs to front, isFrontMost=\(frontMost)")
+            if !frontMost,
+               let appURL = NSWorkspace.shared.urlForApplication(
+                withBundleIdentifier: EmacsBundleId) {
+                Logger.info("activating Emacs via openApplication")
+                NSWorkspace.shared.openApplication(at: appURL, configuration: .init())
+            }
+
             runShellCommand(EmacsClient, args) { code, msg in
                 Logger.info("openFile result: \(code) \(msg)")
                 if code == 0 {
-                    // Bring Emacs to front without triggering toggle logic in focusOnEmacs
-                    let frontMost = isFrontMost()
-                    Logger.info("openFile done, isFrontMost=\(frontMost)")
-                    if !frontMost,
-                       let appURL = NSWorkspace.shared.urlForApplication(
-                        withBundleIdentifier: EmacsBundleId) {
-                        Logger.info("activating Emacs via openApplication")
-                        NSWorkspace.shared.openApplication(at: appURL, configuration: .init())
-                    }
                     succeed?(true)
                 } else {
                     displayError(#function, code, msg)
