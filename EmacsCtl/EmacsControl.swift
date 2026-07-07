@@ -7,6 +7,7 @@
 
 import Foundation
 import AppKit
+import ApplicationServices
 import UserNotifications
 
 class EmacsControl: NSObject {
@@ -299,14 +300,7 @@ class EmacsControl: NSObject {
             // is already visible and the user can respond instead of the flow
             // getting stuck behind a not-yet-foregrounded window.
             // Avoid triggering toggle logic in focusOnEmacs.
-            let frontMost = isFrontMost()
-            Logger.info("openFile: bring Emacs to front, isFrontMost=\(frontMost)")
-            if !frontMost,
-               let appURL = NSWorkspace.shared.urlForApplication(
-                withBundleIdentifier: EmacsBundleId) {
-                Logger.info("activating Emacs via openApplication")
-                NSWorkspace.shared.openApplication(at: appURL, configuration: .init())
-            }
+            bringEmacsWindowToFront()
 
             runShellCommand(EmacsClient, args) { code, msg in
                 Logger.info("openFile result: \(code) \(msg)")
@@ -408,6 +402,47 @@ class EmacsControl: NSObject {
 
     static func isFrontMost() -> Bool {
         return NSWorkspace.shared.frontmostApplication?.bundleIdentifier == EmacsBundleId
+    }
+
+    /// Activate Emacs and explicitly raise its window. Application activation
+    /// alone can update the menu bar without ordering an existing window front.
+    static func bringEmacsWindowToFront() {
+        guard let app = NSRunningApplication.runningApplications(
+            withBundleIdentifier: EmacsBundleId
+        ).first else {
+            Logger.warning("cannot bring Emacs to front: app is not running")
+            return
+        }
+
+        let wasFrontMost = isFrontMost()
+        let activated = app.activate(options: [.activateAllWindows])
+
+        let appElement = AXUIElementCreateApplication(app.processIdentifier)
+        var windowRef: CFTypeRef?
+        var result = AXUIElementCopyAttributeValue(
+            appElement, kAXFocusedWindowAttribute as CFString, &windowRef)
+
+        if result != .success {
+            var windowsRef: CFTypeRef?
+            result = AXUIElementCopyAttributeValue(
+                appElement, kAXWindowsAttribute as CFString, &windowsRef)
+            windowRef = (windowsRef as? [AXUIElement])?.first
+        }
+
+        guard let windowRef else {
+            Logger.warning(
+                "activated Emacs but could not find a window to raise: "
+                    + "wasFrontMost=\(wasFrontMost), activated=\(activated), axResult=\(result.rawValue)"
+            )
+            return
+        }
+
+        let window = windowRef as! AXUIElement
+        let raiseResult = AXUIElementPerformAction(window, kAXRaiseAction as CFString)
+        Logger.info(
+            "brought Emacs window to front: wasFrontMost=\(wasFrontMost), "
+                + "activated=\(activated), raiseResult=\(raiseResult.rawValue)"
+        )
     }
 
     // MARK: -
