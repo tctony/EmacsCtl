@@ -404,8 +404,8 @@ class EmacsControl: NSObject {
         return NSWorkspace.shared.frontmostApplication?.bundleIdentifier == EmacsBundleId
     }
 
-    /// Activate Emacs and explicitly raise its window. Application activation
-    /// alone can update the menu bar without ordering an existing window front.
+    /// Activate Emacs and explicitly focus its window. Application activation
+    /// alone can update the menu bar without making an existing window key.
     static func bringEmacsWindowToFront() {
         guard let app = NSRunningApplication.runningApplications(
             withBundleIdentifier: EmacsBundleId
@@ -439,9 +439,17 @@ class EmacsControl: NSObject {
 
         let window = windowRef as! AXUIElement
         let raiseResult = AXUIElementPerformAction(window, kAXRaiseAction as CFString)
+        let focusWindowResult = AXUIElementSetAttributeValue(
+            appElement, kAXFocusedWindowAttribute as CFString, window)
+        let mainResult = AXUIElementSetAttributeValue(
+            window, kAXMainAttribute as CFString, kCFBooleanTrue)
+        let focusResult = AXUIElementSetAttributeValue(
+            window, kAXFocusedAttribute as CFString, kCFBooleanTrue)
         Logger.info(
-            "brought Emacs window to front: wasFrontMost=\(wasFrontMost), "
-                + "activated=\(activated), raiseResult=\(raiseResult.rawValue)"
+            "focused Emacs window: wasFrontMost=\(wasFrontMost), "
+                + "activated=\(activated), raiseResult=\(raiseResult.rawValue), "
+                + "focusWindowResult=\(focusWindowResult.rawValue), "
+                + "mainResult=\(mainResult.rawValue), focusResult=\(focusResult.rawValue)"
         )
     }
 

@@ -72,7 +72,7 @@ pkill -x "EmacsCtl Debug"     # a previous Debug instance
 open "$DEV_APP"
 ```
 
-## Deeplink testing
+## External open testing
 
 A plain `open emacsctl://...` routes to whichever app LaunchServices has
 registered as the default scheme handler (often the release app in
@@ -89,6 +89,21 @@ open -g -a "$DEV_APP" \
 
 Use `-a` to bypass the default URL-scheme handler and reuse the running
 Debug instance.
+
+Test file-open routing the same way, especially after changes to focusing or
+file-extension handling:
+
+```bash
+DEV_APP="$(find "$HOME/Library/Developer/Xcode/DerivedData" \
+  -path '*/Build/Products/Debug/EmacsCtl Debug.app' -type d -print0 |
+  xargs -0 ls -td | head -n 1)"
+
+pkill -x "EmacsCtl Debug"
+open -a "$DEV_APP" "$PWD/README.md"
+```
+
+This verifies the `openFile` path against the freshly built Debug app instead
+of whichever app LaunchServices would choose for the file type.
 
 ## Config
 
