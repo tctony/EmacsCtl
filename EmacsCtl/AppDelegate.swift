@@ -241,6 +241,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
                                 action: #selector(AppDelegate.checkForUpdates(_:)),
                                 keyEquivalent: ""))
 
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: NSLocalizedString("view_log", comment: ""),
+                                action: #selector(AppDelegate.viewLog(_:)),
+                                keyEquivalent: ""))
+
         menu.addItem(withTitle: NSLocalizedString("quit", comment: ""),
                      action: #selector(AppDelegate.quitEmacsCtl(_:)),
                      keyEquivalent: "")
@@ -287,6 +292,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     @objc func editConfigFile(_ sender: NSMenuItem) {
         Logger.info("edit config file in emacs")
         EmacsControl.openConfigFile()
+    }
+
+    @objc func viewLog(_ sender: NSMenuItem) {
+        Logger.info("open log file")
+        Logger.flush()
+        NSWorkspace.shared.open(URL(fileURLWithPath: Logger.logFilePath))
     }
 
     @objc func createEmacsWindow(_ sender: NSMenuItem) {

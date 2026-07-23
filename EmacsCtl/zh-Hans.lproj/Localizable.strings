@@ -8,6 +8,7 @@
 
 "setting" = "设置";
 "edit_config" = "编辑配置";
+"view_log" = "查看日志";
 "quit" = "退出";
 
 "config_invalid_title" = "配置无效";

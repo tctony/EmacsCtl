@@ -16,58 +16,113 @@ enum LogLevel: String {
 
 class Logger {
     static let shared = Logger()
-    
+
     private let logFileURL: URL
     private let dateFormatter: DateFormatter
-    private let fileHandle: FileHandle?
+    private var fileHandle: FileHandle?
+    private var currentWeek: String
     private let queue = DispatchQueue(label: "com.emacsctl.logger", qos: .utility)
-    
+
     private init() {
-        // Create log file at ~/.cache/emacsctl.log
-        let cacheDir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".cache")
-        
+        let logDirectoryURL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".cache")
+        let now = Date()
+
         // Ensure .cache directory exists
-        if !FileManager.default.fileExists(atPath: cacheDir.path) {
-            try? FileManager.default.createDirectory(at: cacheDir, withIntermediateDirectories: true)
+        if !FileManager.default.fileExists(atPath: logDirectoryURL.path) {
+            try? FileManager.default.createDirectory(at: logDirectoryURL, withIntermediateDirectories: true)
         }
-        
-        logFileURL = cacheDir.appendingPathComponent("emacsctl.log")
-        
+
+        logFileURL = logDirectoryURL.appendingPathComponent("emacsctl.log")
+
         // Create file if it doesn't exist
         if !FileManager.default.fileExists(atPath: logFileURL.path) {
             FileManager.default.createFile(atPath: logFileURL.path, contents: nil)
         }
-        
-        // Open file handle for appending
-        fileHandle = try? FileHandle(forWritingTo: logFileURL)
-        fileHandle?.seekToEndOfFile()
-        
+
+        let attributes = try? FileManager.default.attributesOfItem(atPath: logFileURL.path)
+        let fileSize = (attributes?[.size] as? NSNumber)?.uint64Value ?? 0
+        let logDate = fileSize > 0 ? (attributes?[.modificationDate] as? Date ?? now) : now
+        currentWeek = Self.weekIdentifier(for: logDate)
+        fileHandle = nil
+
         // Setup date formatter
         dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+
+        rotateIfNeeded(at: now)
+        openLogFile()
     }
-    
+
     deinit {
         try? fileHandle?.close()
     }
-    
-    private func log(_ level: LogLevel, _ message: String, file: String = #file, function: String = #function, line: Int = #line) {
-        let timestamp = dateFormatter.string(from: Date())
+
+    private static func weekIdentifier(for date: Date) -> String {
+        var calendar = Calendar(identifier: .iso8601)
+        calendar.timeZone = .current
+        let components = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
+        return String(format: "%04d-W%02d", components.yearForWeekOfYear!, components.weekOfYear!)
+    }
+
+    private func openLogFile() {
+        guard fileHandle == nil else { return }
+        fileHandle = try? FileHandle(forWritingTo: logFileURL)
+        fileHandle?.seekToEndOfFile()
+    }
+
+    private func rotateIfNeeded(at date: Date) {
+        let newWeek = Self.weekIdentifier(for: date)
+        guard newWeek != currentWeek else { return }
+
+        try? fileHandle?.synchronize()
+        try? fileHandle?.close()
+        fileHandle = nil
+
+        let fileManager = FileManager.default
+        let attributes = try? fileManager.attributesOfItem(atPath: logFileURL.path)
+        let fileSize = (attributes?[.size] as? NSNumber)?.uint64Value ?? 0
+        let modificationDate = attributes?[.modificationDate] as? Date
+
+        if fileSize > 0, let modificationDate {
+            let logFileWeek = Self.weekIdentifier(for: modificationDate)
+
+            // Debug and release share this file, so only delete it if it still belongs to an older week.
+            if logFileWeek != newWeek {
+                try? fileManager.removeItem(at: logFileURL)
+            }
+        }
+
+        if !fileManager.fileExists(atPath: logFileURL.path) {
+            fileManager.createFile(atPath: logFileURL.path, contents: nil)
+        }
+
+        currentWeek = newWeek
+        openLogFile()
+    }
+
+    private func log(_ level: LogLevel,
+                     _ message: String,
+                     file: String = #file,
+                     function: String = #function,
+                     line: Int = #line) {
+        let now = Date()
+        let timestamp = dateFormatter.string(from: now)
         let fileName = (file as NSString).lastPathComponent
         let logMessage = "[\(timestamp)] [\(level.rawValue)] [\(fileName):\(line)] \(function) - \(message)\n"
-        
+
         queue.async { [weak self] in
             guard let self = self, let data = logMessage.data(using: .utf8) else { return }
+            self.rotateIfNeeded(at: now)
             self.fileHandle?.write(data)
-            
+
             // Also print to console in DEBUG builds
             #if DEBUG
             print(logMessage, terminator: "")
             #endif
         }
     }
-    
+
     // MARK: - Public Methods
     
     static func debug(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {

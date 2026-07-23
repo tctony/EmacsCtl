@@ -8,6 +8,7 @@
 
 "setting" = "Setting";
 "edit_config" = "Edit config";
+"view_log" = "View Log";
 "quit" = "Quit";
 
 "config_invalid_title" = "Invalid config";
