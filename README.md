@@ -2,6 +2,8 @@
 
 ### Features
 - Use menu on mac status bar to control(start, restart, new window...) emacs deamon process just like systemctl does on linux.
+  - Set `serverFile` in the machine-local config to use a TCP server; otherwise
+    EmacsCtl uses the traditional Unix socket connection.
 - Activate emacs window with global shortcut.
   - The shortcut can also run a custom elisp snippet (e.g. to toggle between Emacs and another app) when Emacs is already frontmost.
 - Support `org-protocol` scheme so you don't need to create an applescript app to do that.

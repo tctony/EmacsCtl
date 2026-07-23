@@ -15,6 +15,8 @@ struct Config {
 
     var emacsInstallDir: String?
 
+    var emacsServerFile: String?
+
     var focusCode: String?
 
     var fileExtensions: String?
@@ -41,6 +43,7 @@ private struct SharedConfig: Codable {
 private struct LocalConfig: Codable {
     var pidFile: String?
     var installDir: String?
+    var serverFile: String?
     var autoRestoreLayout: Bool?
     var launchAtLogin: Bool?
     var didShowSettingOnFirstLaunch: Bool?
@@ -51,6 +54,7 @@ private struct LocalConfig: Codable {
 private struct LegacyConfig: Codable {
     var pidFile: String?
     var installDir: String?
+    var serverFile: String?
     var focusCode: String?
     var fileExtensions: String?
     var gitOpenFunction: String?
@@ -198,6 +202,7 @@ private final class ConfigFile {
             let legacy = try loadMigrationSource().legacy
             local = LocalConfig(pidFile: legacy.pidFile,
                                 installDir: legacy.installDir,
+                                serverFile: legacy.serverFile,
                                 autoRestoreLayout: legacy.autoRestoreLayout,
                                 launchAtLogin: legacy.launchAtLogin,
                                 didShowSettingOnFirstLaunch: legacy.didShowSettingOnFirstLaunch,
@@ -266,6 +271,7 @@ private final class ConfigFile {
     private static let localConfigKeys = [
         "pidFile",
         "installDir",
+        "serverFile",
         "autoRestoreLayout",
         "launchAtLogin",
         "didShowSettingOnFirstLaunch",
@@ -339,6 +345,7 @@ class ConfigStore {
     private static func deriveConfig(shared: SharedConfig, local: LocalConfig) -> Config {
         Config(emacsPidFile: local.pidFile,
                emacsInstallDir: local.installDir,
+               emacsServerFile: local.serverFile,
                focusCode: shared.focusCode,
                fileExtensions: shared.fileExtensions ?? ConfigStore.defaultFileExtensions,
                gitOpenFunction: shared.gitOpenFunction ?? "",
@@ -355,6 +362,12 @@ class ConfigStore {
         store.updateLocal { $0.installDir = installDir }
 
         config.emacsInstallDir = installDir
+    }
+
+    func setServerFile(_ serverFile: String) {
+        store.updateLocal { $0.serverFile = serverFile }
+
+        config.emacsServerFile = serverFile
     }
 
     func setFocusCode(_ focusCode: String) {

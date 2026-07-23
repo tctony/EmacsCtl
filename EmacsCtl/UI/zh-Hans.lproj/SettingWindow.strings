@@ -5,6 +5,12 @@
 /* Class = "NSTextFieldCell"; title = "Emacs Install Dir:"; ObjectID = "NLP-qo-4QN"; */
 "NLP-qo-4QN.title" = "Emacs二进制目录:";
 
+/* Class = "NSTextFieldCell"; title = "Emacs Server File (optional):"; ObjectID = "SRV-lbl-cell-001"; */
+"SRV-lbl-cell-001.title" = "Emacs Server文件 (可选):";
+
+/* Class = "NSTextFieldCell"; placeholderString = "e.g. server or /path/to/server"; ObjectID = "SRV-xx-cell-001"; */
+"SRV-xx-cell-001.placeholderString" = "例如 server 或 /path/to/server";
+
 /* Class = "NSButtonCell"; title = "Launch At Login"; ObjectID = "Nrn-Rr-DzS"; */
 "Nrn-Rr-DzS.title" = "开机启动";
 

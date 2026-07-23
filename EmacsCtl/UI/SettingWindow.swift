@@ -15,6 +15,8 @@ class SettingWindowController: BaseWindowController {
 
     @IBOutlet var installDirTextField: NSTextField!
 
+    @IBOutlet var serverFileTextField: NSTextField!
+
     @IBOutlet var focusCodeTextField: NSTextField!
 
     @IBOutlet var gitOpenFunctionTextField: NSTextField!
@@ -43,6 +45,9 @@ class SettingWindowController: BaseWindowController {
         if let dir = ConfigStore.shared.config.emacsInstallDir {
             installDirTextField.stringValue = dir
         }
+        if let serverFile = ConfigStore.shared.config.emacsServerFile {
+            serverFileTextField.stringValue = serverFile
+        }
         if let focusCode = ConfigStore.shared.config.focusCode {
             focusCodeTextField.stringValue = focusCode
         }
@@ -55,7 +60,7 @@ class SettingWindowController: BaseWindowController {
 
         // Auto-restore layout row (below "Launch At Login", above separator)
         if let contentView = window?.contentView {
-            let rowY: CGFloat = 310
+            let rowY: CGFloat = 368
 
             // Checkbox: auto restore layout
             let checkbox = NSButton(checkboxWithTitle: NSLocalizedString("auto_restore_layout", comment: ""),
@@ -153,6 +158,12 @@ class SettingWindowController: BaseWindowController {
         let focusCode = focusCodeTextField.stringValue
         Logger.debug("focus code changed: \(focusCode)")
         ConfigStore.shared.setFocusCode(focusCode)
+    }
+
+    @IBAction func serverFileDidChange(_ sender: Any) {
+        let serverFile = serverFileTextField.stringValue
+        Logger.debug("server file changed: \(serverFile)")
+        ConfigStore.shared.setServerFile(serverFile)
     }
 
     @IBAction func gitOpenFunctionDidChange(_ sender: Any) {

@@ -15,8 +15,8 @@ class EmacsControl: NSObject {
     static let Emacs = "emacs"
     static let EmacsClient = "emacsclient"
     
-    /// Find the Emacs server socket path
-    /// macOS stores it in $TMPDIR/emacs$UID/server
+    /// Find the Emacs server socket path. macOS stores it in
+    /// `$TMPDIR/emacs$UID/server` when `server-use-tcp` is disabled.
     static func findSocketPath() -> String? {
         let uid = getuid()
         
@@ -57,15 +57,20 @@ class EmacsControl: NSObject {
             }
         }
         
-        Logger.warning("could not find emacs socket")
         return nil
     }
-    
-    /// Build emacsclient arguments with socket path if needed
+
+    /// Build emacsclient arguments for either a Unix socket or TCP server.
     static func buildEmacsClientArgs(_ args: [String]) -> [String] {
+        if let serverFile = ConfigStore.shared.config.emacsServerFile,
+           !serverFile.isEmpty {
+            Logger.debug("using configured TCP server file: \(serverFile)")
+            return ["-f", serverFile] + args
+        }
         if let socketPath = findSocketPath() {
             return ["-s", socketPath] + args
         }
+        Logger.warning("could not find emacs socket")
         return args
     }
 

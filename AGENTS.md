@@ -114,7 +114,7 @@ of the bundle ID, so the Debug and release builds **share the same config**.
   `fileExtensions`, and `gitOpenFunction`. It may be a symlink; writes preserve
   the link and external changes to its resolved target are watched.
 - `~/.config/emacsctl/local.json` stores machine-local state: `pidFile`,
-  `installDir`, `autoRestoreLayout`, `launchAtLogin`,
+  `installDir`, `serverFile`, `autoRestoreLayout`, `launchAtLogin`,
   `didShowSettingOnFirstLaunch`, and `savedWindowLayout`.
 
 - `EmacsCtl/ConfigStore.swift` is the single entry point. `ConfigStore`
