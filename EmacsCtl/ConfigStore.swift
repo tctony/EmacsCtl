@@ -168,6 +168,13 @@ private final class ConfigFile {
         return [ConfigFile.directoryURL, sharedDirectory]
     }
 
+    /// Files whose contents can change in place without notifying their parent
+    /// directories. Resolve symlinks so edits to the shared target are covered.
+    var watchedFileURLs: [URL] {
+        [ConfigFile.storageURL(for: ConfigFile.fileURL),
+         ConfigFile.storageURL(for: ConfigFile.localFileURL)]
+    }
+
     private func persistShared() {
         do {
             lastSharedData = try ConfigFile.write(sharedConfig, to: ConfigFile.fileURL)
@@ -323,6 +330,7 @@ class ConfigStore {
     /// Watch both the public config directory and a symlink target directory.
     private var configDirSources: [DispatchSourceFileSystemObject] = []
     private var watchedConfigDirectories = Set<String>()
+    private var configFileSources: [DispatchSourceFileSystemObject] = []
 
     /// On-disk path of the config file, for opening it in an editor.
     var configFileURL: URL { ConfigFile.fileURL }
@@ -339,6 +347,7 @@ class ConfigStore {
         config = ConfigStore.deriveConfig(shared: store.sharedConfig, local: store.localConfig)
 
         updateConfigDirWatchers()
+        restartConfigFileWatchers()
     }
 
     /// Combine the shared and local files and apply runtime defaults.
@@ -451,6 +460,7 @@ class ConfigStore {
             source.setEventHandler { [weak self] in
                 self?.reloadIfChanged()
                 self?.updateConfigDirWatchers()
+                self?.restartConfigFileWatchers()
             }
             source.setCancelHandler { close(fd) }
             source.resume()
@@ -459,9 +469,38 @@ class ConfigStore {
         }
     }
 
-    /// Re-read the config file after a directory event and apply any external
-    /// change. Our own writes are recognised by content comparison and ignored,
-    /// which also filters unrelated events in the directory.
+    /// File-level watchers catch in-place writes, which do not change the
+    /// parent directory. They are rebuilt after every event because an atomic
+    /// replacement changes the inode behind the path.
+    private func restartConfigFileWatchers() {
+        configFileSources.forEach { $0.cancel() }
+        configFileSources = []
+
+        for file in store.watchedFileURLs {
+            let fd = open(file.path, O_EVTONLY)
+            guard fd >= 0 else {
+                Logger.warning("failed to watch config file: \(file.path)")
+                continue
+            }
+
+            let source = DispatchSource.makeFileSystemObjectSource(
+                fileDescriptor: fd,
+                eventMask: [.write, .extend, .delete, .rename],
+                queue: .main)
+            source.setEventHandler { [weak self] in
+                self?.reloadIfChanged()
+                self?.updateConfigDirWatchers()
+                self?.restartConfigFileWatchers()
+            }
+            source.setCancelHandler { close(fd) }
+            source.resume()
+            configFileSources.append(source)
+            Logger.debug("watching config file: \(file.path)")
+        }
+    }
+
+    /// Re-read both config files after a file-system event. Our own writes are
+    /// recognised by content comparison and ignored.
     private func reloadIfChanged() {
         let oldExtensions = store.sharedConfig.fileExtensions
         let result = store.reloadFromDisk()
