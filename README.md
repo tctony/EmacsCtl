@@ -25,6 +25,7 @@
     paths, login state, and window layouts live in `~/.config/emacsctl/local.json`.
   - `config.json` may be a symlink; EmacsCtl preserves it when saving and watches
     the resolved target for external changes.
+- Open the EmacsCtl log from the status bar menu; logs rotate weekly.
 
 ### Install
 
