@@ -107,22 +107,28 @@ of whichever app LaunchServices would choose for the file type.
 
 ## Config
 
-All persisted settings live in a single JSON file at
-`~/.config/emacsctl/config.json`. The path is independent of the bundle
-ID, so the Debug and release builds **share the same config**.
+Persisted settings are split between two JSON files. Their paths are independent
+of the bundle ID, so the Debug and release builds **share the same config**.
+
+- `~/.config/emacsctl/config.json` stores shareable behavior: `focusCode`,
+  `fileExtensions`, and `gitOpenFunction`. It may be a symlink; writes preserve
+  the link and external changes to its resolved target are watched.
+- `~/.config/emacsctl/local.json` stores machine-local state: `pidFile`,
+  `installDir`, `autoRestoreLayout`, `launchAtLogin`,
+  `didShowSettingOnFirstLaunch`, and `savedWindowLayout`.
 
 - `EmacsCtl/ConfigStore.swift` is the single entry point. `ConfigStore`
   exposes the settings; `ConfigFile` (file-private in the same file) is
   the JSON-backed store and is the on-disk source of truth.
-- "Reset data" clears all settings by writing an *empty* config file.
-- Stored keys (`AppConfig`): `pidFile`, `installDir`, `focusCode`,
-  `fileExtensions`, `gitOpenFunction`, `autoRestoreLayout`,
-  `launchAtLogin`, `didShowSettingOnFirstLaunch`, `savedWindowLayout`.
+- If `local.json` does not exist, the app splits the old combined `config.json`;
+  the existence of `local.json` marks migration completion.
+- "Reset data" clears all settings by writing empty shared and local files.
 
 Read the current config directly when you need it:
 
 ```bash
 cat ~/.config/emacsctl/config.json
+cat ~/.config/emacsctl/local.json
 ```
 
 ## Logs

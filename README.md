@@ -19,6 +19,10 @@
     (e.g. after wake from sleep).
 - Edit the JSON config file directly in Emacs from the status bar menu.
   - External edits are detected and applied live, without restarting the app.
+  - Shareable settings live in `~/.config/emacsctl/config.json`; machine-local
+    paths, login state, and window layouts live in `~/.config/emacsctl/local.json`.
+  - `config.json` may be a symlink; EmacsCtl preserves it when saving and watches
+    the resolved target for external changes.
 
 ### Install
 
@@ -60,4 +64,3 @@
 - Finally control your emacs from status bar menu.
 
     ![](./assets/menu.png)
-
